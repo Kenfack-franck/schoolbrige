@@ -1,0 +1,8 @@
+[
+  {"nom": "Frau Claudia Schneider", "matieres": ["Deutsch", "DaZ"], "classes": ["5a", "7b", "10c"], "permanence": "Mardi 13h-14h", "email": "schneider@fsg-heilbronn.de", "roles": ["Responsable DaZ"]},
+  {"nom": "Herr Jürgen Becker", "matieres": ["Mathematik", "Physik"], "classes": ["10a", "10c", "11"], "permanence": "Jeudi 13h-14h", "email": "becker@fsg-heilbronn.de", "roles": ["Klassenlehrer 10c"]},
+  {"nom": "Frau Anna Krause", "matieres": ["Englisch", "Geschichte"], "classes": ["5b", "8a", "10c"], "permanence": "Mercredi 13h-14h", "email": "krause@fsg-heilbronn.de", "roles": []},
+  {"nom": "Herr Thomas Müller", "matieres": [], "classes": [], "permanence": "Mercredi et Vendredi 10h-14h", "email": "mueller@fsg-heilbronn.de", "roles": ["Beratungslehrer (conseiller d'orientation)"]},
+  {"nom": "Frau Petra Fischer", "matieres": ["Biologie", "Chemie"], "classes": ["5a", "9b", "11"], "permanence": "Lundi 13h-14h", "email": "fischer@fsg-heilbronn.de", "roles": ["Klassenlehrer 5a"]},
+  {"nom": "Herr Michael Wagner", "matieres": ["Sport", "Geographie"], "classes": ["6a", "8b", "10a"], "permanence": "Vendredi 13h-14h", "email": "wagner@fsg-heilbronn.de", "roles": []}
+]

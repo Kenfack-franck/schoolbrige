@@ -1,0 +1,41 @@
+{
+  "id": "ECOLE-FSG",
+  "nom": "Friedrich-Schiller-Gymnasium Heilbronn",
+  "type": "Gymnasium",
+  "adresse": "Friedrich-Ebert-Straße 20, 74072 Heilbronn",
+  "telephone": "+49 7131 562451",
+  "email": "sekretariat@fsg-heilbronn.de",
+  "site_web": "https://www.fsg-heilbronn.de",
+  "directeur": "Dr. Markus Hoffmann",
+  "secretariat": {
+    "nom": "Frau Ingrid Weber",
+    "horaires": "Lundi-Vendredi 8h00-12h00 et 14h00-16h00",
+    "email": "weber@fsg-heilbronn.de"
+  },
+  "horaires_cours": {
+    "debut": "07:45",
+    "fin": "13:05 (sans après-midi) / 15:30 (avec après-midi)",
+    "detail": [
+      {"heure": "1. Stunde", "de": "07:45", "a": "08:30"},
+      {"heure": "2. Stunde", "de": "08:35", "a": "09:20"},
+      {"heure": "Große Pause", "de": "09:20", "a": "09:40"},
+      {"heure": "3. Stunde", "de": "09:40", "a": "10:25"},
+      {"heure": "4. Stunde", "de": "10:30", "a": "11:15"},
+      {"heure": "Pause", "de": "11:15", "a": "11:30"},
+      {"heure": "5. Stunde", "de": "11:30", "a": "12:15"},
+      {"heure": "6. Stunde", "de": "12:20", "a": "13:05"},
+      {"heure": "Mittagspause", "de": "13:05", "a": "14:00"},
+      {"heure": "7. Stunde", "de": "14:00", "a": "14:45"},
+      {"heure": "8. Stunde", "de": "14:50", "a": "15:30"}
+    ]
+  },
+  "cantine": {
+    "disponible": true,
+    "prix_repas": "4,50 € (réduit à 1 € avec BuT)",
+    "horaires": "12h15-13h45"
+  },
+  "langues_proposees": ["Englisch (ab Klasse 5)", "Französisch (ab Klasse 6)", "Latein (ab Klasse 6)", "Spanisch (ab Klasse 8)"],
+  "profils_specifiques": ["Naturwissenschaftliches Profil", "Sprachliches Profil", "Musik-Profil"],
+  "nombre_eleves": 856,
+  "nombre_enseignants": 72
+}

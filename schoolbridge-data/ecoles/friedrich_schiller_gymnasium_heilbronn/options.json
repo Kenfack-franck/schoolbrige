@@ -1,0 +1,26 @@
+{
+  "wahlpflichtfaecher": {
+    "ab_klasse_8": ["Spanisch (3. Fremdsprache)", "NwT (Naturwissenschaft und Technik)", "Musik verstärkt"],
+    "ab_klasse_11": ["Literatur und Theater", "Psychologie", "Informatik", "Wirtschaft"]
+  },
+  "ags": [
+    {"nom": "Theater-AG", "jour": "Mardi", "heure": "14h-16h", "responsable": "Frau Schneider", "classes": "Alle"},
+    {"nom": "Robotik-AG", "jour": "Mercredi", "heure": "14h-16h", "responsable": "Herr Becker", "classes": "Ab Klasse 7"},
+    {"nom": "Fußball-AG", "jour": "Lundi", "heure": "14h-15h30", "responsable": "Herr Wagner", "classes": "Alle"},
+    {"nom": "Chor", "jour": "Jeudi", "heure": "13h30-15h", "responsable": "Frau Hoffmann", "classes": "Alle"},
+    {"nom": "Schülerzeitung", "jour": "Vendredi", "heure": "13h30-15h", "responsable": "Frau Krause", "classes": "Ab Klasse 8"},
+    {"nom": "Nachhilfe-Programm (tutorat entre élèves)", "jour": "Lundi-Jeudi", "heure": "13h-14h", "responsable": "Coordination: Herr Müller", "classes": "Alle"}
+  ],
+  "ganztagsangebote": {
+    "disponible": true,
+    "jours": "Lundi à Jeudi",
+    "horaires": "14h-16h",
+    "contenu": "Aide aux devoirs supervisée, activités libres, AGs",
+    "inscription": "Via formulaire au secrétariat, engagement pour un semestre"
+  },
+  "soutien_scolaire": {
+    "nachhilfe_interne": "Programme de tutorat entre élèves (Schüler helfen Schülern) — les élèves de Klasse 10+ aident les plus jeunes. Gratuit. Contact : Herr Müller.",
+    "foerderunterricht": "Cours de soutien en Deutsch et Mathematik pour les élèves en difficulté, 1x par semaine. Sur recommandation de l'enseignant.",
+    "daz_kurs": "Cours d'allemand langue seconde (Deutsch als Zweitsprache) pour les élèves non-germanophones. 4h par semaine. Contact : Frau Schneider."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "annee_scolaire": "2025-2026",
+  "elternabende": [
+    {"date": "2025-10-15", "heure": "18:00", "classes": "Klasse 5-6", "lieu": "Aula", "description": "Elternabend des classes 5 et 6 — présentation du programme, rencontre avec les professeurs principaux"},
+    {"date": "2025-10-22", "heure": "18:00", "classes": "Klasse 7-9", "lieu": "Aula", "description": "Elternabend des classes 7 à 9 — point sur le trimestre, orientation"},
+    {"date": "2025-10-29", "heure": "18:00", "classes": "Klasse 10-12", "lieu": "Aula", "description": "Elternabend des classes 10 à 12 — Oberstufe, préparation Abitur, orientation post-bac"},
+    {"date": "2026-03-20", "heure": "18:00", "classes": "Klasse 5-6", "lieu": "Aula", "description": "Deuxième Elternabend — bilan du 1er semestre"},
+    {"date": "2026-03-25", "heure": "18:00", "classes": "Klasse 7-12", "lieu": "Aula", "description": "Deuxième Elternabend — bilan et perspectives"}
+  ],
+  "examens": [
+    {"periode": "2026-01-19 au 2026-01-30", "type": "Klassenarbeiten", "classes": "Toutes", "description": "Période d'examens écrits du 1er semestre"},
+    {"periode": "2026-04-27 au 2026-05-08", "type": "Abitur schriftlich", "classes": "Klasse 12", "description": "Épreuves écrites de l'Abitur"},
+    {"periode": "2026-06-22 au 2026-07-03", "type": "Abitur mündlich", "classes": "Klasse 12", "description": "Épreuves orales de l'Abitur"},
+    {"periode": "2026-06-15 au 2026-06-26", "type": "Klassenarbeiten", "classes": "Toutes sauf 12", "description": "Période d'examens du 2ème semestre"}
+  ],
+  "bulletins": [
+    {"date": "2026-01-30", "type": "Halbjahreszeugnis", "description": "Bulletin du 1er semestre"},
+    {"date": "2026-07-24", "type": "Jahreszeugnis", "description": "Bulletin de fin d'année"}
+  ],
+  "evenements": [
+    {"date": "2025-12-18", "nom": "Weihnachtskonzert", "description": "Concert de Noël de l'école — tous les parents invités"},
+    {"date": "2026-02-14", "nom": "Tag der offenen Tür", "description": "Journée portes ouvertes — pour les parents d'élèves de Klasse 4 qui envisagent le Gymnasium"},
+    {"date": "2026-03-05", "nom": "Anmeldung Klasse 5", "debut": "2026-03-05", "fin": "2026-03-08", "description": "Période d'inscription pour les nouveaux élèves de Klasse 5"},
+    {"date": "2026-04-10", "nom": "Kuchenverkauf Klasse 7", "description": "Vente de gâteaux organisée par les parents de Klasse 7"},
+    {"date": "2026-06-20", "nom": "Schulfest", "description": "Fête de l'école — spectacles, stands, restauration"},
+    {"date": "2026-07-04", "nom": "Abiturfeier", "description": "Cérémonie de remise des diplômes de l'Abitur"}
+  ],
+  "inscriptions": {
+    "klasse_5": {
+      "periode": "5 au 8 mars 2026",
+      "documents_requis": [
+        "Geburtsurkunde (acte de naissance) ou passeport de l'enfant",
+        "Grundschulempfehlung (recommandation de la Grundschule)",
+        "Anmeldeformular (formulaire d'inscription — disponible en ligne ou au secrétariat)",
+        "Passfoto (photo d'identité)",
+        "Nachweis Masernimpfung (certificat de vaccination rougeole)"
+      ],
+      "ou": "Secrétariat du Friedrich-Schiller-Gymnasium, 8h-12h et 14h-16h"
+    }
+  }
+}

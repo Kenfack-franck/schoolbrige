@@ -1,0 +1,158 @@
+{
+  "description": "Inventaire complet des fichiers et données disponibles dans SchoolBridge. Ce fichier est envoyé à l'agent à chaque conversation pour qu'il sache ce qu'il peut demander.",
+  "derniere_mise_a_jour": "2026-03-14",
+
+  "fichiers_connaissances": {
+    "national": [
+      {
+        "id": "NAT-01",
+        "fichier": "knowledge/national/systeme_scolaire.md",
+        "titre": "Le système scolaire allemand — Vue d'ensemble",
+        "contient": "Types d'écoles (Grundschule, Gymnasium, Realschule, Hauptschule, Gesamtschule, Förderschule), diplômes (Hauptschulabschluss, Mittlerer Schulabschluss, Abitur), passerelles entre filières, système de notation 1-6, structure générale du parcours scolaire"
+      },
+      {
+        "id": "NAT-02",
+        "fichier": "knowledge/national/notation_et_bulletins.md",
+        "titre": "Système de notation et bulletins scolaires",
+        "contient": "Échelle de notes 1-6 avec signification détaillée, le Zeugnis (bulletin), ce qu'il contient, conditions de passage en classe supérieure, système de points en Oberstufe (0-15), particularités de la Grundschule"
+      },
+      {
+        "id": "NAT-03",
+        "fichier": "knowledge/national/droits_des_parents.md",
+        "titre": "Droits et devoirs des parents",
+        "contient": "Schulpflicht (obligation scolaire), droit à l'information, droit de participation (Elternbeirat), droit de contestation (orientation, notes, sanctions), droit au soutien (Nachteilsausgleich), devoirs des parents (absences, matériel, participation), normes de communication avec l'école"
+      },
+      {
+        "id": "NAT-04",
+        "fichier": "knowledge/national/ausbildung.md",
+        "titre": "L'Ausbildung — Formation professionnelle en Allemagne",
+        "contient": "Fonctionnement de la formation duale, avantages (salaire, diplôme, embauche), conditions d'accès selon le diplôme, exemples de métiers populaires, comment trouver une place, perspectives après l'Ausbildung (Meister, Fachhochschule), importance culturelle en Allemagne"
+      },
+      {
+        "id": "NAT-05",
+        "fichier": "knowledge/national/aides_financieres.md",
+        "titre": "Aides financières pour les familles",
+        "contient": "Bildung und Teilhabe (BuT) — qui a droit, ce que ça couvre (fournitures 195€/an, cantine, sorties, transport, soutien scolaire, activités 15€/mois), comment demander. Kindergeld (250€/mois/enfant). Schüler-BAföG. Aides des associations"
+      },
+      {
+        "id": "NAT-06",
+        "fichier": "knowledge/national/culture_scolaire.md",
+        "titre": "Culture scolaire allemande",
+        "contient": "Elternabend (soirée de parents), Elternsprechtag (jour de consultation), Elternbeirat (conseil de parents), Schultüte (tradition de rentrée), Kuchenverkauf (vente de gâteaux), Schulfest (fête de l'école), Bundesjugendspiele (compétitions sportives), règles implicites (ponctualité, Pausenbrot, matériel, absences)"
+      },
+      {
+        "id": "NAT-07",
+        "fichier": "knowledge/national/communication_ecole.md",
+        "titre": "Communiquer avec l'école",
+        "contient": "Canaux de communication (email, carnet, apps, téléphone), modèles de messages en allemand pour situations courantes (maladie, rendez-vous, problème avec un élève, incompréhension du bulletin, contestation), procédures de recours"
+      }
+    ],
+    "baden_wuerttemberg": [
+      {
+        "id": "BW-01",
+        "fichier": "knowledge/lands/baden_wuerttemberg/structure.md",
+        "titre": "Structure scolaire au Baden-Württemberg",
+        "contient": "Spécificités BW : Gymnasium G8, Realschule à deux niveaux (M et G), Werkrealschule (spécificité BW), Gemeinschaftsschule (créée 2012). Options après Klasse 10 selon le diplôme : Berufliches Gymnasium, Berufskolleg, passage en Gymnasium Oberstufe"
+      },
+      {
+        "id": "BW-02",
+        "fichier": "knowledge/lands/baden_wuerttemberg/orientation.md",
+        "titre": "Orientation après la Grundschule au BW",
+        "contient": "Processus complet : réunion d'information, Grundschulempfehlung (février), Elternwille (libre choix des parents depuis 2012 au BW), Beratungsverfahren (optionnel), inscription (mars). Critères indicatifs de recommandation. Point clé : la recommandation n'est PAS contraignante au BW"
+      },
+      {
+        "id": "BW-03",
+        "fichier": "knowledge/lands/baden_wuerttemberg/calendrier_2025_2026.md",
+        "titre": "Calendrier scolaire 2025-2026 BW",
+        "contient": "Dates exactes de toutes les vacances scolaires (automne, Noël, carnaval, Pâques, Pentecôte, été), jours fériés spécifiques au BW (Allerheiligen, Heilige Drei Könige, Fronleichnam), tableau des dates importantes pour les parents (rentrée, bulletins, orientation, inscriptions)"
+      },
+      {
+        "id": "BW-04",
+        "fichier": "knowledge/lands/baden_wuerttemberg/procedures.md",
+        "titre": "Procédures administratives au BW",
+        "contient": "Inscription en Klasse 1 (Einschulung) avec documents requis, inscription en école secondaire, inscription de nouveaux arrivants (Quereinsteiger) avec contact Schulamt, changement d'école (même Land et déménagement), demande de soutien scolaire via BuT, Nachteilsausgleich, gestion des absences et justificatifs"
+      },
+      {
+        "id": "BW-05",
+        "fichier": "knowledge/lands/baden_wuerttemberg/bildungsplan.md",
+        "titre": "Programme scolaire (Bildungsplan) du BW",
+        "contient": "Bildungsplan 2016. Matières et objectifs par niveau : Grundschule (Klasse 1-4), Gymnasium Klasse 5-12 avec choix de profil en Klasse 8 (sprachlich, naturwissenschaftlich, musisch, IMP), Kursstufe (Leistungsfächer et Basisfächer), BOGY-Praktikum en Klasse 10. Realschule avec niveaux M et G et Wahlpflichtfach"
+      },
+      {
+        "id": "BW-06",
+        "fichier": "knowledge/lands/baden_wuerttemberg/aides_locales.md",
+        "titre": "Aides locales BW / Heilbronn",
+        "contient": "Contacts administratifs Heilbronn : Schulamt (adresse, tel, horaires), Landratsamt service BuT (adresse, tel, horaires, documents à apporter), Jobcenter, Jugendamt. Associations locales : Integrationsbeauftragte, VHS (cours d'allemand), Caritas, Diakonie (Bildungspaten). Spécificités BuT au BW et procédure simplifiée"
+      }
+    ]
+  },
+
+  "donnees_ecoles": [
+    {
+      "id": "ECOLE-FSG",
+      "nom": "Friedrich-Schiller-Gymnasium Heilbronn",
+      "type": "Gymnasium",
+      "fichiers_disponibles": [
+        {
+          "id": "ECOLE-FSG-01",
+          "fichier": "ecoles/friedrich_schiller_gymnasium_heilbronn/infos.json",
+          "contient": "Adresse, téléphone, email, site web, directeur, secrétariat (nom, horaires, email), horaires de cours détaillés (1. Stunde à 8. Stunde), cantine (prix, horaires, réduction BuT), langues proposées, profils spécifiques, nombre d'élèves et enseignants"
+        },
+        {
+          "id": "ECOLE-FSG-02",
+          "fichier": "ecoles/friedrich_schiller_gymnasium_heilbronn/enseignants.json",
+          "contient": "Liste de 6 enseignants avec nom, matières enseignées, classes, heures de permanence (Sprechstunde), email, rôles spéciaux (Klassenlehrer, responsable DaZ, Beratungslehrer)"
+        },
+        {
+          "id": "ECOLE-FSG-03",
+          "fichier": "ecoles/friedrich_schiller_gymnasium_heilbronn/calendrier.json",
+          "contient": "Dates des Elternabende par classes (octobre 2025 et mars 2026), périodes d'examens (Klassenarbeiten et Abitur), dates des bulletins (Halbjahreszeugnis et Jahreszeugnis), événements (Weihnachtskonzert, Tag der offenen Tür, Kuchenverkauf, Schulfest, Abiturfeier), période et documents d'inscription Klasse 5"
+        },
+        {
+          "id": "ECOLE-FSG-04",
+          "fichier": "ecoles/friedrich_schiller_gymnasium_heilbronn/options.json",
+          "contient": "Wahlpflichtfächer par niveau (Spanisch, NwT, Musik ab Klasse 8 / Literatur, Psychologie, Informatik, Wirtschaft ab Klasse 11), AGs (Theater, Robotik, Fußball, Chor, Schülerzeitung, Nachhilfe-Programm avec jours et horaires), Ganztagsangebote (Lundi-Jeudi 14h-16h), programme de soutien scolaire interne (tutorat entre élèves, Förderunterricht, DaZ-Kurs)"
+        }
+      ]
+    }
+  ],
+
+  "donnees_dynamiques": {
+    "parents": {
+      "fichier": "parents/parents.json",
+      "description": "Profils des 6 parents inscrits : identité, langue maternelle, autres langues, pays d'origine, ville/quartier, ancienneté en Allemagne, niveau d'allemand, compréhension du système scolaire, statut buddy, enfants rattachés",
+      "nombre": 6,
+      "langues_representees": ["Turc", "Ukrainien", "Arabe", "Polonais", "Anglais"]
+    },
+    "enfants": {
+      "fichier": "enfants/enfants.json",
+      "description": "Profils des 9 enfants inscrits : identité, âge, classe, type d'école, nom de l'école, Land, moyenne générale, matières fortes/faibles, compétence dominante, besoins particuliers, notes récentes par matière",
+      "nombre": 9,
+      "ecoles_representees": ["Friedrich-Schiller-Gymnasium", "Grundschule Böckingen", "Grundschule Sontheim", "Dammrealschule Heilbronn", "Gemeinschaftsschule Heilbronn", "Werkrealschule Heilbronn"],
+      "niveaux_representes": ["Klasse 1", "Klasse 2", "Klasse 5", "Klasse 7", "Klasse 8", "Klasse 9", "Klasse 10", "Klasse 11"]
+    },
+    "personnes_ressources": {
+      "fichier": "personnes_ressources/personnes_ressources.json",
+      "description": "8 personnes-ressources disponibles pour aider les parents",
+      "nombre": 8,
+      "par_role": {
+        "Parent-relais (Buddy)": ["PR-001 Fatma Demir (turc, Gymnasium)", "PR-002 Olena Kovalenko (ukrainien, Grundschule)", "PR-003 Ahmad Hassan (arabe, Realschule)"],
+        "Secrétariat": ["PR-004 Ingrid Weber (Friedrich-Schiller-Gymnasium)"],
+        "Conseiller d'orientation": ["PR-005 Thomas Müller (Friedrich-Schiller-Gymnasium)"],
+        "Enseignante": ["PR-006 Claudia Schneider (DaZ, Friedrich-Schiller-Gymnasium) — n'accepte PAS les demandes directes, contact via secrétariat uniquement"],
+        "Médiatrice interculturelle": ["PR-007 Elif Arslan (turc/allemand/anglais, Schulamt Heilbronn)"],
+        "Conseiller BuT": ["PR-008 Stefan Braun (Landratsamt) — PAS sur la plateforme, contact externe uniquement"]
+      }
+    }
+  },
+
+  "informations_NON_disponibles": [
+    "Données des écoles autres que le Friedrich-Schiller-Gymnasium (Grundschule Böckingen, Grundschule Sontheim, Dammrealschule, Gemeinschaftsschule, Werkrealschule — on n'a pas leurs infos détaillées)",
+    "Données des autres Länder (seul le Baden-Württemberg est couvert)",
+    "Emplois du temps individuels des élèves",
+    "Résultats détaillés des examens futurs",
+    "Informations sur les autres villes que Heilbronn",
+    "Données médicales ou psychologiques des enfants",
+    "Informations sur les formations Ausbildung spécifiques disponibles à Heilbronn"
+  ]
+}
