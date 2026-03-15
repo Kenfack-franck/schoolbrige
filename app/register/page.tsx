@@ -91,7 +91,6 @@ export default function RegisterPage() {
     setForm((prev) => {
       const enfants = [...prev.enfants];
       enfants[index] = { ...enfants[index], [field]: value };
-      // Auto-fill nom with parent's nom if empty
       if (field === "prenom" && !enfants[index].nom) {
         enfants[index].nom = prev.nom;
       }
@@ -190,41 +189,53 @@ export default function RegisterPage() {
   }
 
   const inputClass = (field: string) =>
-    `w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-      errors[field] ? "border-red-400 bg-red-50" : "border-slate-300"
+    `w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white transition-colors ${
+      errors[field]
+        ? "border-danger/60 bg-danger/5 focus:ring-danger/20"
+        : "border-line hover:border-primary/40"
     }`;
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="bg-blue-600 text-white px-6 py-4 flex items-center gap-4">
-        <Link href="/" className="text-white hover:text-blue-200 text-sm font-medium">
-          ← Accueil
+    <div className="min-h-screen bg-canvas-soft">
+
+      {/* ── Header ── */}
+      <header className="h-16 flex items-center px-6 border-b border-line bg-white/90 backdrop-blur-sm sticky top-0 z-40"
+        style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+        <Link href="/" className="flex items-center gap-2">
+          <span className="font-display font-bold text-primary text-xl">🎓 SchoolBridge</span>
         </Link>
-        <div>
-          <h1 className="text-xl font-bold">SchoolBridge</h1>
-          <p className="text-xs text-blue-200">Créer un profil</p>
+        <div className="ml-auto flex items-center gap-3">
+          <Link
+            href="/chat?parentId=PAR-001"
+            className="text-sm text-muted hover:text-foreground transition-colors hidden sm:block"
+          >
+            Voir la démo
+          </Link>
         </div>
       </header>
 
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold text-slate-800 mb-1">Créez votre profil</h2>
-        <p className="text-slate-500 mb-8 text-sm">
-          Ces informations permettent à SchoolBridge de personnaliser ses réponses.
-        </p>
+      <div className="max-w-2xl mx-auto px-4 py-10 pb-20">
+
+        {/* Page title */}
+        <div className="mb-8">
+          <h1 className="font-display font-bold text-3xl text-foreground mb-2">
+            Créez votre profil
+          </h1>
+          <p className="text-muted">
+            SchoolBridge personnalise chaque réponse selon votre situation familiale et votre langue.
+          </p>
+        </div>
 
         {errors._global && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">
-            {errors._global}
+          <div className="mb-6 bg-danger/8 border border-danger/30 text-danger rounded-xl px-4 py-3 text-sm font-medium">
+            ⚠️ {errors._global}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
 
           {/* ── Section Parent ── */}
-          <section className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4">
-            <h3 className="font-semibold text-slate-800 text-lg border-b border-slate-100 pb-3">
-              Votre profil
-            </h3>
+          <Card icon="👤" title="Votre profil">
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Prénom *" error={errors.prenom}>
@@ -240,7 +251,7 @@ export default function RegisterPage() {
             <Field label="Langue maternelle *" error={errors.langue_maternelle}>
               <select className={inputClass("langue_maternelle")} value={form.langue_maternelle}
                 onChange={(e) => setParent("langue_maternelle", e.target.value)}>
-                <option value="">— Sélectionnez —</option>
+                <option value="">— Sélectionnez votre langue —</option>
                 {LANGUES.map((l) => <option key={l}>{l}</option>)}
               </select>
             </Field>
@@ -281,27 +292,22 @@ export default function RegisterPage() {
                 <option>Non</option>
               </select>
             </Field>
-          </section>
+          </Card>
 
           {/* ── Section Enfants ── */}
-          <section className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-6">
-            <h3 className="font-semibold text-slate-800 text-lg border-b border-slate-100 pb-3">
-              Votre/vos enfant(s)
-            </h3>
+          <Card icon="🎒" title="Votre/vos enfant(s)">
 
             {form.enfants.map((enfant, i) => (
-              <div key={i} className="flex flex-col gap-4 pb-4 border-b border-slate-100 last:border-0 last:pb-0">
-                <div className="flex items-center justify-between">
-                  <p className="font-medium text-slate-700 text-sm">
-                    Enfant {form.enfants.length > 1 ? i + 1 : ""}
-                  </p>
-                  {form.enfants.length > 1 && (
+              <div key={i} className={`flex flex-col gap-4 ${i > 0 ? "pt-5 border-t border-line" : ""}`}>
+                {form.enfants.length > 1 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-foreground">Enfant {i + 1}</span>
                     <button type="button" onClick={() => removeEnfant(i)}
-                      className="text-xs text-red-500 hover:text-red-700">
+                      className="text-xs text-danger/70 hover:text-danger font-medium transition-colors">
                       Supprimer
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-4">
                   <Field label="Prénom *" error={errors[`enfant_${i}_prenom`]}>
@@ -353,27 +359,61 @@ export default function RegisterPage() {
 
             {form.enfants.length < 4 && (
               <button type="button" onClick={addEnfant}
-                className="self-start text-sm text-blue-600 hover:text-blue-800 font-medium">
-                + Ajouter un autre enfant
+                className="self-start text-sm font-medium text-primary hover:text-primary-light transition-colors flex items-center gap-1.5 mt-1">
+                <span className="text-base leading-none">+</span>
+                Ajouter un autre enfant
               </button>
             )}
-          </section>
+          </Card>
 
           {/* Submit */}
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-4 text-white font-display font-semibold text-base rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0"
+            style={{
+              background: submitting
+                ? "var(--color-primary)"
+                : "linear-gradient(135deg, #1B4B6B 0%, #2A6F97 100%)",
+              boxShadow: "0 4px 16px rgba(27,75,107,0.3)",
+            }}
           >
-            {submitting ? "Inscription en cours..." : "Créer mon profil et démarrer →"}
+            {submitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                Création du profil...
+              </span>
+            ) : (
+              "Créer mon profil et démarrer →"
+            )}
           </button>
+
+          <p className="text-center text-xs text-muted">
+            Déjà un profil ?{" "}
+            <Link href="/chat?parentId=PAR-001" className="text-primary hover:underline">
+              Voir la démo
+            </Link>
+          </p>
         </form>
       </div>
-    </main>
+    </div>
   );
 }
 
-// ─── Helper component ─────────────────────────────────────────────────────────
+// ─── Helper components ─────────────────────────────────────────────────────────
+
+function Card({ icon, title, children }: { icon: string; title: string; children: React.ReactNode }) {
+  return (
+    <section className="bg-white border border-line rounded-2xl p-6 flex flex-col gap-5"
+      style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+      <div className="flex items-center gap-3 pb-4 border-b border-line">
+        <span className="text-2xl">{icon}</span>
+        <h2 className="font-display font-bold text-lg text-foreground">{title}</h2>
+      </div>
+      {children}
+    </section>
+  );
+}
 
 function Field({ label, error, children }: {
   label: string;
@@ -381,10 +421,10 @@ function Field({ label, error, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-slate-600">{label}</label>
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-semibold text-muted uppercase tracking-wide">{label}</label>
       {children}
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="text-xs text-danger font-medium">{error}</p>}
     </div>
   );
 }

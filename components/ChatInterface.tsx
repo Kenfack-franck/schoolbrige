@@ -808,55 +808,61 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
       <div className="flex flex-col flex-1 min-h-0 min-w-0">
 
       {/* ── Context bar ──────────────────────────────────────────────────────── */}
-      <div className="shrink-0 bg-white border-b border-line px-4 py-2 flex items-center gap-3">
+      <div
+        className="shrink-0 px-4 py-2.5 flex items-center gap-3"
+        style={{
+          background: "linear-gradient(135deg, #0D2E45 0%, #1B4B6B 100%)",
+          boxShadow: "0 2px 8px rgba(13,46,69,0.18)",
+        }}
+      >
         {/* Agent identity + status */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm shrink-0"
-            style={{ background: "var(--color-accent)" }}
+            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-base shrink-0"
+            style={{
+              background: "linear-gradient(135deg, #E8913A, #C97820)",
+              boxShadow: "0 0 0 2px rgba(232,145,58,0.3)",
+            }}
           >
             🎓
           </div>
           <div className="hidden sm:flex flex-col">
-            <p className="text-xs font-semibold text-foreground leading-tight">SchoolBridge Assistant</p>
-            <span className="flex items-center gap-1 text-[10px] text-muted">
-              <span
-                className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"
-                style={{ animation: "dot-bounce 2s ease-in-out infinite" }}
-              />
-              En ligne
+            <p className="text-sm font-semibold text-white leading-tight">SchoolBridge</p>
+            <span className="flex items-center gap-1.5 text-[11px] text-white/50">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0 animate-pulse" />
+              Assistant IA · En ligne
             </span>
           </div>
         </div>
 
         {/* Divider */}
         {isIdentified && (
-          <div className="hidden sm:block w-px h-6 bg-line shrink-0" />
+          <div className="hidden sm:block w-px h-6 bg-white/15 shrink-0" />
         )}
 
         {/* Parent info */}
         {isIdentified && (
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <div
-              className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-              style={{ background: "var(--color-primary)" }}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 border-2 border-white/20"
+              style={{ background: "rgba(255,255,255,0.15)" }}
             >
               {parentMeta ? parentMeta.initiales : "…"}
             </div>
             <div className="min-w-0">
               {parentMeta ? (
                 <>
-                  <p className="text-xs font-semibold text-foreground leading-tight truncate">
+                  <p className="text-sm font-semibold text-white leading-tight truncate">
                     {parentMeta.prenom}
                   </p>
                   {parentMeta.enfants.length > 0 && (
-                    <p className="text-[10px] text-muted leading-tight truncate">
-                      {parentMeta.enfants.map((e) => `${e.prenom} · ${e.classe}`).join("  |  ")}
+                    <p className="text-[11px] text-white/50 leading-tight truncate">
+                      {parentMeta.enfants.map((e) => `${e.prenom} · ${e.classe}`).join("  ·  ")}
                     </p>
                   )}
                 </>
               ) : (
-                <p className="text-[10px] text-muted">Chargement…</p>
+                <p className="text-[11px] text-white/40">Chargement…</p>
               )}
             </div>
           </div>
@@ -864,14 +870,14 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
         {!isIdentified && <div className="flex-1" />}
 
         {/* Right-side controls */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           {isIdentified && (
             <button
               type="button"
               onClick={handleClear}
               disabled={isLoading}
               title="Effacer la conversation"
-              className="w-8 h-8 rounded-full flex items-center justify-center text-muted hover:bg-canvas-muted hover:text-foreground transition-colors disabled:opacity-40 text-sm"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-40 text-sm"
             >
               🗑️
             </button>
@@ -883,8 +889,8 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               title={autoSpeak ? "Désactiver la lecture automatique" : "Activer la lecture automatique"}
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors ${
                 autoSpeak
-                  ? "text-primary bg-primary-lighter"
-                  : "text-muted bg-canvas-muted"
+                  ? "bg-white/20 text-white"
+                  : "text-white/40 hover:bg-white/10 hover:text-white/70"
               }`}
             >
               {autoSpeak ? "🔊" : "🔇"}
@@ -895,7 +901,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               type="button"
               onClick={() => setNotifPanelOpen((v) => !v)}
               title={`${urgentCount} message${urgentCount > 1 ? "s" : ""} urgent${urgentCount > 1 ? "s" : ""}`}
-              className="xl:hidden relative w-8 h-8 rounded-full flex items-center justify-center bg-accent-light hover:bg-amber-100 transition-colors"
+              className="xl:hidden relative w-8 h-8 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
             >
               <span className="text-sm">🔔</span>
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-white text-[10px] font-bold flex items-center justify-center" style={{ background: "var(--color-accent)" }}>
@@ -907,19 +913,29 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
       </div>
 
       {/* ── Messages area ────────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-4 max-w-3xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-4 max-w-3xl mx-auto w-full"
+        style={{ background: "linear-gradient(180deg, #F3F7FA 0%, #F8FAFB 100%)" }}
+      >
 
         {/* Anonymous welcome */}
         {!isIdentified && messages.length === 0 && (
           <div className="flex justify-start gap-3">
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center text-white text-base shrink-0 mt-1"
-              style={{ background: "var(--color-accent)" }}
+              style={{
+                background: "linear-gradient(135deg, #E8913A, #C97820)",
+                boxShadow: "0 2px 8px rgba(232,145,58,0.3)",
+              }}
             >
               🎓
             </div>
-            <div className="max-w-[80%] px-5 py-4 bg-white border border-line text-foreground rounded-2xl rounded-bl-md break-words text-base"
-              style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+            <div
+              className="max-w-[80%] px-5 py-4 text-foreground rounded-2xl rounded-bl-md break-words text-base border border-line/60"
+              style={{
+                background: "white",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+              }}
+            >
               <ReactMarkdown components={MD_COMPONENTS}>
                 {"Bienvenue sur SchoolBridge ! 👋\n\nJe suis votre mentor scolaire. Posez-moi vos questions sur le système scolaire allemand dans votre langue."}
               </ReactMarkdown>
@@ -936,16 +952,19 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
             return (
               <div key={msg.id} className="flex justify-start gap-2">
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm shrink-0 mt-1"
-                  style={{ background: "var(--color-accent)" }}
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-base shrink-0 mt-1"
+                  style={{
+                    background: "linear-gradient(135deg, #E8913A, #C97820)",
+                    boxShadow: "0 2px 10px rgba(232,145,58,0.35)",
+                  }}
                 >
                   🎓
                 </div>
                 <div
-                  className="max-w-[85%] rounded-2xl rounded-bl-md overflow-hidden border border-line"
+                  className="max-w-[85%] rounded-2xl rounded-bl-md overflow-hidden border border-line/60"
                   style={{
-                    background: "linear-gradient(135deg, var(--color-primary-lighter) 0%, #ffffff 60%)",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                    background: "linear-gradient(145deg, #EBF4FB 0%, #ffffff 55%)",
+                    boxShadow: "0 4px 16px rgba(27,75,107,0.10)",
                   }}
                 >
                   {/* Card header */}
@@ -1007,8 +1026,11 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
             return (
               <div key={msg.id} className="flex justify-end">
                 <div
-                  className="max-w-[80%] px-5 py-3.5 text-white rounded-2xl rounded-br-md break-words"
-                  style={{ background: "var(--color-primary)" }}
+                  className="max-w-[80%] px-5 py-3.5 text-white rounded-2xl rounded-br-sm break-words"
+                  style={{
+                    background: "linear-gradient(135deg, #1B4B6B 0%, #2A6F97 100%)",
+                    boxShadow: "0 2px 12px rgba(27,75,107,0.25)",
+                  }}
                 >
                   {msg.imagePreview === "__pdf__" && (
                     <div
@@ -1050,8 +1072,8 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                 )}
                 {!isFirstInSeries && <div className="w-10 shrink-0" />}
                 <div
-                  className="px-5 py-3.5 bg-white border border-line rounded-2xl rounded-bl-md"
-                  style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
+                  className="px-5 py-3.5 rounded-2xl rounded-bl-md border border-line/60"
+                  style={{ background: "white", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}
                 >
                   <ThinkingDots />
                 </div>
@@ -1113,7 +1135,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               {isFirstInSeries ? (
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center text-white text-base shrink-0 mt-1"
-                  style={{ background: "var(--color-accent)" }}
+                  style={{ background: "linear-gradient(135deg, #E8913A, #C97820)", boxShadow: "0 2px 8px rgba(232,145,58,0.3)" }}
                 >
                   🎓
                 </div>
@@ -1123,8 +1145,8 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               <div className="max-w-[80%] flex flex-col gap-1.5">
                 {/* Bubble */}
                 <div
-                  className="px-5 py-4 bg-white border border-line text-foreground rounded-2xl rounded-bl-md break-words"
-                  style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
+                  className="px-5 py-4 text-foreground rounded-2xl rounded-bl-md break-words border border-line/60"
+                  style={{ background: "white", boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}
                 >
                   <div className="text-base">
                     <ReactMarkdown components={MD_COMPONENTS}>{msg.content}</ReactMarkdown>
@@ -1305,11 +1327,11 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
         {messages.filter((m) => m.role === "user").length === 0 && !isLoading && (
           <div className="flex flex-wrap gap-2 mt-2">
             {[
-              { icon: "📝", label: "Inscrire mon enfant à l'école" },
-              { icon: "📅", label: "Vacances scolaires" },
-              { icon: "📊", label: "Comprendre le bulletin" },
-              { icon: "📚", label: "Aide aux devoirs" },
-            ].map(({ icon, label }) => (
+              { icon: "📝", label: "Inscrire mon enfant à l'école", color: "#EBF4FB", iconColor: "#1B4B6B" },
+              { icon: "📅", label: "Vacances scolaires", color: "#EDFAF3", iconColor: "#2D8A56" },
+              { icon: "📊", label: "Comprendre le bulletin", color: "#FEF3E8", iconColor: "#E8913A" },
+              { icon: "📚", label: "Aide aux devoirs", color: "#F3EDFB", iconColor: "#9B59B6" },
+            ].map(({ icon, label, color, iconColor }) => (
               <button
                 key={label}
                 type="button"
@@ -1317,10 +1339,15 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                   setInput(label);
                   setTimeout(() => inputRef.current?.focus(), 50);
                 }}
-                className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border border-line bg-white hover:bg-canvas-muted transition-colors text-foreground"
-                style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
+                className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl border border-line/60 bg-white hover:-translate-y-0.5 hover:shadow-md transition-all duration-150 text-foreground"
+                style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}
               >
-                <span>{icon}</span>
+                <span
+                  className="w-6 h-6 rounded-lg flex items-center justify-center text-sm shrink-0"
+                  style={{ background: color, color: iconColor }}
+                >
+                  {icon}
+                </span>
                 <span>{label}</span>
               </button>
             ))}
@@ -1332,7 +1359,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
 
       {/* ── File preview ─────────────────────────────────────────────────────── */}
       {selectedFile && (
-        <div className="max-w-3xl mx-auto w-full px-4 pb-1 flex items-center gap-2">
+        <div className="max-w-3xl mx-auto w-full px-4 pt-2 flex items-center gap-2">
           {filePreview === "__pdf__" ? (
             <div className="flex items-center gap-2 h-12 px-3 bg-canvas-soft border border-line rounded-xl">
               <span className="text-xl">📄</span>
@@ -1359,96 +1386,103 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
 
       {/* Interim STT text */}
       {interimText && (
-        <div className="max-w-3xl mx-auto w-full px-4 pb-1">
-          <p className="text-sm text-muted italic px-4 py-1.5 bg-canvas-soft rounded-xl border border-line">
-            {interimText}
+        <div className="max-w-3xl mx-auto w-full px-4 pt-1">
+          <p className="text-sm text-muted italic px-4 py-1.5 bg-white/80 rounded-xl border border-line/60">
+            🎙️ {interimText}
           </p>
         </div>
       )}
 
       {/* ── Input form ───────────────────────────────────────────────────────── */}
-      <form
-        onSubmit={handleSubmit}
-        className="flex items-end gap-2.5 px-5 py-4 border-t border-line bg-white max-w-3xl mx-auto w-full"
+      <div className="max-w-3xl mx-auto w-full px-4 pb-4 pt-2"
+        style={{ background: "linear-gradient(0deg, #F3F7FA 0%, #F3F7FA 100%)" }}
       >
-        {/* Mic button (circle, left) */}
-        {hasSTT && (
+        <form
+          onSubmit={handleSubmit}
+          className="flex items-end gap-2 p-2 rounded-2xl border border-line/80 bg-white"
+          style={{ boxShadow: "0 4px 24px rgba(27,75,107,0.10), 0 1px 4px rgba(0,0,0,0.06)" }}
+        >
+          {/* Mic button */}
+          {hasSTT && (
+            <button
+              type="button"
+              onClick={toggleListening}
+              disabled={isLoading}
+              title={isListening ? "Arrêter la dictée" : "Dicter un message"}
+              className={`shrink-0 w-10 h-10 rounded-xl text-lg flex items-center justify-center transition-all duration-200 disabled:opacity-40 ${
+                isListening
+                  ? "bg-red-50 text-red-500 animate-pulse"
+                  : "text-muted hover:bg-canvas-soft hover:text-primary"
+              }`}
+            >
+              🎙️
+            </button>
+          )}
+
+          {/* Textarea */}
+          <textarea
+            ref={inputRef}
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            rows={1}
+            placeholder={
+              isListening
+                ? "Parlez maintenant…"
+                : selectedFile
+                ? "Ajouter un message (optionnel)…"
+                : "Posez votre question…"
+            }
+            disabled={isLoading}
+            className="flex-1 px-3 py-2.5 text-base focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed bg-transparent"
+            style={{
+              minHeight: "44px",
+              maxHeight: "140px",
+            }}
+          />
+
+          {/* Upload button */}
           <button
             type="button"
-            onClick={toggleListening}
+            onClick={() => fileInputRef.current?.click()}
             disabled={isLoading}
-            title={isListening ? "Arrêter la dictée" : "Dicter un message"}
-            className={`shrink-0 w-11 h-11 rounded-full text-lg flex items-center justify-center transition-colors disabled:opacity-40 ${
-              isListening
-                ? "bg-red-100 text-red-600 animate-pulse"
-                : "bg-canvas-muted text-muted hover:bg-canvas-soft hover:text-foreground"
-            }`}
+            title="Envoyer un document (image ou PDF)"
+            className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-muted hover:text-primary hover:bg-canvas-soft transition-all duration-200 disabled:opacity-40 text-lg"
           >
-            🎙️
+            📎
           </button>
-        )}
-        {!hasSTT && !hasTTS && null}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".jpg,.jpeg,.png,.pdf,.webp"
+            className="hidden"
+            onChange={handleFileSelect}
+          />
 
-        {/* Textarea */}
-        <textarea
-          ref={inputRef}
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          rows={1}
-          placeholder={
-            isListening
-              ? "Parlez maintenant…"
-              : selectedFile
-              ? "Ajouter un message (optionnel)…"
-              : "Tapez votre message… (Entrée pour envoyer)"
-          }
-          disabled={isLoading}
-          className="flex-1 px-5 py-3 rounded-2xl border border-line text-base focus:outline-none focus:ring-2 focus:border-primary-light disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed"
-          style={{
-            minHeight: "48px",
-            maxHeight: "140px",
-            "--tw-ring-color": "var(--color-primary-light)",
-          } as React.CSSProperties}
-        />
+          {/* Send button */}
+          <button
+            type="submit"
+            disabled={isLoading || !hasInput}
+            title="Envoyer"
+            className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-white text-base font-bold transition-all duration-200 disabled:cursor-not-allowed"
+            style={{
+              background: hasInput && !isLoading
+                ? "linear-gradient(135deg, #E8913A, #C97820)"
+                : "var(--color-canvas-muted)",
+              color: hasInput && !isLoading ? "white" : "var(--color-muted)",
+              boxShadow: hasInput && !isLoading ? "0 2px 8px rgba(232,145,58,0.35)" : "none",
+              transform: hasInput && !isLoading ? "scale(1)" : "scale(0.95)",
+            }}
+          >
+            ▶
+          </button>
+        </form>
 
-        {/* Upload button */}
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isLoading}
-          title="Envoyer un document (image ou PDF)"
-          className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-muted hover:text-foreground hover:bg-canvas-muted transition-colors disabled:opacity-40 text-xl"
-        >
-          📎
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".jpg,.jpeg,.png,.pdf,.webp"
-          className="hidden"
-          onChange={handleFileSelect}
-        />
-
-        {/* Send button (amber when has content, muted when empty) */}
-        <button
-          type="submit"
-          disabled={isLoading || !hasInput}
-          title="Envoyer"
-          className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white text-lg font-bold transition-all disabled:cursor-not-allowed"
-          style={{
-            background: hasInput && !isLoading ? "var(--color-accent)" : "var(--color-canvas-muted)",
-            color: hasInput && !isLoading ? "white" : "var(--color-muted)",
-          }}
-        >
-          ▶
-        </button>
-      </form>
-
-      {/* ── Disclaimer ───────────────────────────────────────────────────────── */}
-      <p className="text-center text-[10px] text-muted px-4 pb-2 bg-white max-w-3xl mx-auto w-full">
-        SchoolBridge peut faire des erreurs. Vérifiez les informations importantes auprès de l&apos;école.
-      </p>
+        {/* Disclaimer */}
+        <p className="text-center text-[11px] text-muted/60 mt-2">
+          SchoolBridge peut faire des erreurs. Vérifiez les informations importantes auprès de l&apos;école.
+        </p>
+      </div>
 
       {/* ── Notification panel overlay ───────────────────────────────────────── */}
       {notifPanelOpen && urgentPosts.length > 0 && (
