@@ -9,11 +9,13 @@ export default function ChatPageContent() {
   const parentId = searchParams.get("parentId");
 
   return (
-    <main className="h-screen flex flex-col bg-white overflow-hidden">
-      {/* NavBar — hide mobile bottom bar (chat has its own context bar) */}
-      <NavBar parentId={parentId} activePage="chat" hideMobileBar={true} />
-
-      {/* Chat interface fills remaining space */}
+    /*
+      On mobile: the fixed bottom nav bar is ~56px tall (h-14).
+      We add pb-14 on mobile so the chat input sits above the nav bar.
+      On desktop (md+): no bottom bar → no extra padding needed.
+    */
+    <main className="h-screen flex flex-col bg-white overflow-hidden pb-14 md:pb-0">
+      <NavBar parentId={parentId} activePage="chat" />
       <ChatInterface parentId={parentId} />
     </main>
   );

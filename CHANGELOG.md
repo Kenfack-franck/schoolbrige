@@ -1,5 +1,25 @@
 # Changelog
 
+## [v8.1.0] — 2026-03-15
+
+### Fix — Navigation mobile (bottom bar)
+
+- **`components/NavBar.tsx`** — refonte de la bottom bar mobile
+  - Suppression de la logique `hideMobileBar ? "hidden" : "md:hidden"` → remplacée par un `{!hideMobileBar && (...)}` JSX conditionnel
+  - Hauteur fixée à `h-14` (56px) pour un rendu prévisible
+  - Toujours 3 boutons affichés (Chat, Dashboard, Community) — séparation entre `desktopNavItems` et `mobileNavItems`
+  - Utilisateurs anonymes : Dashboard et Community affichés en grisé (`opacity-30`, `cursor-not-allowed`, non-cliquables)
+  - État actif amélioré : fond `bg-primary-lighter` derrière l'icône (pilule ronde) + texte et icône en couleur `primary`
+  - États inactifs : texte et icône en `text-muted`
+
+- **`app/chat/ChatPageContent.tsx`** — correction majeure
+  - Suppression de `hideMobileBar={true}` → la bottom bar est maintenant **visible** sur la page chat
+  - Ajout de `pb-14 md:pb-0` sur le `<main>` : réserve 56px en bas sur mobile pour que la zone de saisie ne soit jamais cachée derrière la bottom bar
+  - Sur desktop : aucun changement (pas de padding supplémentaire)
+
+- **`app/dashboard/DashboardContent.tsx`** — déjà correct (`pb-20 md:pb-0`)
+- **`app/community/CommunityPageContent.tsx`** — déjà correct (`pb-20`)
+
 ## [v8.0.0] — 2026-03-15
 
 ### Rebrand + Inline Post Composer
