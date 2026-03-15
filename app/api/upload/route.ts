@@ -8,7 +8,7 @@ import {
   loadKnowledgeFile,
 } from "@/lib/data";
 import {
-  SCHOOLBRIDGE_SYSTEM_PROMPT,
+  ELTERNGUIDE_SYSTEM_PROMPT,
   buildContextPrompt,
   buildAnonymousPrompt,
 } from "@/lib/prompts";
@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
           }
           const children = loadChildrenOf(parentId);
           const contextPrompt = buildContextPrompt(parent, children, inventaire, personnes);
-          systemPrompt = `${SCHOOLBRIDGE_SYSTEM_PROMPT}\n\n${contextPrompt}\n\n${DOCUMENT_ANALYSIS_PROMPT}`;
+          systemPrompt = `${ELTERNGUIDE_SYSTEM_PROMPT}\n\n${contextPrompt}\n\n${DOCUMENT_ANALYSIS_PROMPT}`;
         } else {
           systemPrompt = `${buildAnonymousPrompt(inventaire, personnes)}\n\n${DOCUMENT_ANALYSIS_PROMPT}`;
         }

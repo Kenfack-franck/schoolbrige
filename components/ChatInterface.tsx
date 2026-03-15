@@ -348,7 +348,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           .join("\n");
 
         const welcomeText = [
-          `Welcome to SchoolBridge, ${prenom}! 👋`,
+          `Welcome to ElternGuide, ${prenom}! 👋`,
           "",
           enfants.length > 0 ? `Your registered children:\n${childLines}` : "No children registered.",
           "",
@@ -378,7 +378,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
         setMessages([{
           id: crypto.randomUUID(),
           role: "assistant",
-          content: "Welcome to SchoolBridge! 👋\n\nHow can I help you?",
+          content: "Welcome to ElternGuide! 👋\n\nHow can I help you?",
           isWelcome: true,
         }]);
       });
@@ -842,7 +842,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
             🎓
           </div>
           <div className="hidden sm:flex flex-col">
-            <p className="text-sm font-semibold text-white leading-tight">SchoolBridge</p>
+            <p className="text-sm font-semibold text-white leading-tight">ElternGuide</p>
             <span className="flex items-center gap-1.5 text-[11px] text-white/50">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0 animate-pulse" />
               AI Assistant · Online
@@ -952,7 +952,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               }}
             >
               <ReactMarkdown components={MD_COMPONENTS}>
-                {"Welcome to SchoolBridge! 👋\n\nI am your school mentor. Ask me your questions about the German school system in your language."}
+                {"Welcome to ElternGuide! 👋\n\nI am your school mentor. Ask me your questions about the German school system in your language."}
               </ReactMarkdown>
             </div>
           </div>
@@ -1519,7 +1519,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
 
         {/* Disclaimer */}
         <p className="text-center text-[11px] text-muted/60 mt-2">
-          SchoolBridge may make mistakes. Verify important information with the school.
+          ElternGuide may make mistakes. Verify important information with the school.
         </p>
       </div>
 

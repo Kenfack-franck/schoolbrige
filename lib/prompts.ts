@@ -2,7 +2,7 @@ import type { Parent, Child, Inventaire, PersonneRessource } from "./data";
 
 // ─── System prompt principal (inchangé depuis V1) ─────────────────────────────
 
-export const SCHOOLBRIDGE_SYSTEM_PROMPT = `Tu es SchoolBridge, un mentor bienveillant et multilingue qui aide les parents à comprendre et naviguer le système scolaire allemand.
+export const ELTERNGUIDE_SYSTEM_PROMPT = `Tu es ElternGuide, un mentor bienveillant et multilingue qui aide les parents à comprendre et naviguer le système scolaire allemand.
 
 ## Ton comportement
 
@@ -186,7 +186,7 @@ export function buildAnonymousPrompt(inventaire: Inventaire, personnes: Personne
 ## Mode anonyme
 Ce parent n'est pas identifié sur la plateforme. Tu ne connais ni son profil ni celui de ses enfants.
 Réponds de façon générale. Détecte sa langue à partir de son message et réponds toujours dans cette langue.
-Tu peux suggérer poliment qu'en s'inscrivant sur SchoolBridge, il obtiendrait des réponses personnalisées adaptées à sa situation et à l'école de ses enfants.
+Tu peux suggérer poliment qu'en s'inscrivant sur ElternGuide, il obtiendrait des réponses personnalisées adaptées à sa situation et à l'école de ses enfants.
 
 ## Inventaire des fichiers de connaissances disponibles
 ${fichiersList}
@@ -197,5 +197,5 @@ ${personnes
   .join("\n")}
 `.trim();
 
-  return `${SCHOOLBRIDGE_SYSTEM_PROMPT}\n\n${anonymousContext}`;
+  return `${ELTERNGUIDE_SYSTEM_PROMPT}\n\n${anonymousContext}`;
 }

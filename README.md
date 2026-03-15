@@ -1,4 +1,4 @@
-# SchoolBridge
+# ElternGuide
 
 Mentor IA multilingue pour aider les parents (notamment immigrés) à comprendre et naviguer le système scolaire allemand.
 

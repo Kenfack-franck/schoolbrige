@@ -1,4 +1,4 @@
-# Features SchoolBridge
+# Features ElternGuide
 
 ## Version 6 — Communauté (Partie 2 : Frontend + Bannière)
 

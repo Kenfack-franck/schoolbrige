@@ -9,7 +9,7 @@ import {
   type PersonneRessource,
 } from "@/lib/data";
 import {
-  SCHOOLBRIDGE_SYSTEM_PROMPT,
+  ELTERNGUIDE_SYSTEM_PROMPT,
   buildContextPrompt,
   buildAnonymousPrompt,
 } from "@/lib/prompts";
@@ -161,7 +161,7 @@ export async function POST(req: NextRequest) {
           communityContext = `\n\n=== POSTS RÉCENTS DE LA COMMUNAUTÉ (écoles du parent) ===\n\n${postLines}`;
         }
 
-        const fullSystemPrompt = `${SCHOOLBRIDGE_SYSTEM_PROMPT}\n\n${contextPrompt}${communityContext}`;
+        const fullSystemPrompt = `${ELTERNGUIDE_SYSTEM_PROMPT}\n\n${contextPrompt}${communityContext}`;
 
         const firstCallMessages: ChatMessage[] = [
           ...history,

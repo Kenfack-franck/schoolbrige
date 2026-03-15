@@ -46,7 +46,7 @@ export default function SelectPage() {
           href="/"
           className="font-display font-bold text-primary text-lg flex items-center gap-2 hover:text-primary-light transition-colors"
         >
-          🎓 SchoolBridge
+          🎓 ElternGuide
         </Link>
         <Link href="/" className="ml-auto text-sm text-muted hover:text-foreground transition-colors">
           ← Home

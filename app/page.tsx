@@ -63,7 +63,7 @@ const testimonials = [
     color: "#E8913A",
   },
   {
-    quote: "The letter from school was in German, impossible to understand. In 30 seconds, SchoolBridge translated everything for me.",
+    quote: "The letter from school was in German, impossible to understand. In 30 seconds, ElternGuide translated everything for me.",
     name: "Olena K.",
     role: "Mother of 1 child · Heilbronn",
     flag: "🇺🇦",
@@ -107,7 +107,7 @@ export default function Home() {
       <header className="h-16 flex items-center px-6 md:px-10 border-b border-line bg-white/90 backdrop-blur-sm sticky top-0 z-40"
         style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
         <span className="font-display font-bold text-primary text-xl flex items-center gap-2">
-          🎓 SchoolBridge
+          🎓 ElternGuide
         </span>
         <nav className="ml-auto flex items-center gap-3">
           <Link
@@ -419,7 +419,7 @@ export default function Home() {
       <footer className="py-8 px-6 bg-canvas-soft border-t border-line">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted">
           <span className="font-display font-semibold text-foreground">
-            🎓 SchoolBridge
+            🎓 ElternGuide
           </span>
           <span>
             Made with{" "}

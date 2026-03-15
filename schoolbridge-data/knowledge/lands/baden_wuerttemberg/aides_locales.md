@@ -56,7 +56,7 @@
 Les montants de base sont nationaux (195 €/an pour fournitures, 15 €/mois pour activités) mais l'administration se fait au niveau local.
 
 ### Particularité : le BuT scolaire est souvent méconnu
-Beaucoup de familles ayant droit ne font pas la demande par méconnaissance. Les écoles ne signalent pas toujours aux parents qu'ils pourraient y avoir droit. SchoolBridge peut aider à identifier le droit et guider la demande.
+Beaucoup de familles ayant droit ne font pas la demande par méconnaissance. Les écoles ne signalent pas toujours aux parents qu'ils pourraient y avoir droit. ElternGuide peut aider à identifier le droit et guider la demande.
 
 ### Procédure simplifiée à Heilbronn
 Depuis 2024, certaines prestations BuT (repas scolaires, sorties) peuvent être demandées directement via l'école avec un formulaire simplifié. Se renseigner auprès du secrétariat de l'école.

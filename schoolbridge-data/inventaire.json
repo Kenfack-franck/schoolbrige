@@ -1,5 +1,5 @@
 {
-  "description": "Inventaire complet des fichiers et données disponibles dans SchoolBridge. Ce fichier est envoyé à l'agent à chaque conversation pour qu'il sache ce qu'il peut demander.",
+  "description": "Inventaire complet des fichiers et données disponibles dans ElternGuide. Ce fichier est envoyé à l'agent à chaque conversation pour qu'il sache ce qu'il peut demander.",
   "derniere_mise_a_jour": "2026-03-14",
 
   "fichiers_connaissances": {

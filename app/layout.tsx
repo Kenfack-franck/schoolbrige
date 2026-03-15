@@ -17,9 +17,9 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "SchoolBridge — Votre mentor scolaire intelligent",
+  title: "ElternGuide — Votre guide scolaire intelligent",
   description:
-    "La passerelle entre votre famille et l'école allemande. Multilingue, personnalisé, disponible 24h/24.",
+    "Le guide entre votre famille et l'école allemande. Multilingue, personnalisé, disponible 24h/24.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

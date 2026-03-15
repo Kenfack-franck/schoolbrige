@@ -51,7 +51,7 @@ export default function NavBar({ parentId, activePage, hideMobileBar = false }: 
           href="/"
           className="flex items-center gap-2 font-display font-bold text-primary text-xl hover:text-primary-light transition-colors duration-200 whitespace-nowrap"
         >
-          🎓 <span className="hidden sm:inline">SchoolBridge</span>
+          🎓 <span className="hidden sm:inline">ElternGuide</span>
         </Link>
 
         {/* Nav links — desktop only */}

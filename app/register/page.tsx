@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import {
+  Card as UICard,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -202,7 +208,7 @@ export default function RegisterPage() {
       <header className="h-16 flex items-center px-6 border-b border-line bg-white/90 backdrop-blur-sm sticky top-0 z-40"
         style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
         <Link href="/" className="flex items-center gap-2">
-          <span className="font-display font-bold text-primary text-xl">🎓 SchoolBridge</span>
+          <span className="font-display font-bold text-primary text-xl">🎓 ElternGuide</span>
         </Link>
         <div className="ml-auto flex items-center gap-3">
           <Link
@@ -222,7 +228,7 @@ export default function RegisterPage() {
             Create your profile
           </h1>
           <p className="text-muted">
-            SchoolBridge personalises every response according to your family situation and language.
+            ElternGuide personalises every response according to your family situation and language.
           </p>
         </div>
 
@@ -404,14 +410,17 @@ export default function RegisterPage() {
 
 function Card({ icon, title, children }: { icon: string; title: string; children: React.ReactNode }) {
   return (
-    <section className="bg-white border border-line rounded-2xl p-6 flex flex-col gap-5"
-      style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-      <div className="flex items-center gap-3 pb-4 border-b border-line">
-        <span className="text-2xl">{icon}</span>
-        <h2 className="font-display font-bold text-lg text-foreground">{title}</h2>
-      </div>
-      {children}
-    </section>
+    <UICard>
+      <CardHeader className="px-6 border-b border-line pb-4">
+        <CardTitle className="flex items-center gap-3">
+          <span className="text-2xl">{icon}</span>
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="px-6 flex flex-col gap-5">
+        {children}
+      </CardContent>
+    </UICard>
   );
 }
 

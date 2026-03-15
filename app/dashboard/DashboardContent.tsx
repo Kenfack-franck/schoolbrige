@@ -394,7 +394,7 @@ export default function DashboardContent() {
         {personnesWithContext.length === 0 ? (
           <div className="bg-white rounded-2xl border border-line p-6 text-center" style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}>
             <p className="text-muted text-sm mb-3">
-              Your contacts will appear here as you have conversations with SchoolBridge.
+              Your contacts will appear here as you have conversations with ElternGuide.
             </p>
             <Link
               href={parentId ? `/community?parentId=${parentId}` : "/community"}

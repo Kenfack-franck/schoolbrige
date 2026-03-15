@@ -1,4 +1,4 @@
-# Architecture SchoolBridge
+# Architecture ElternGuide
 
 ## Vue d'ensemble
 

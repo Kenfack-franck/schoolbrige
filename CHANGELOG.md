@@ -1,5 +1,35 @@
 # Changelog
 
+## [v8.0.0] — 2026-03-15
+
+### Rebrand + Inline Post Composer
+
+#### Modification 1 — Renommage ElternGuide
+- Toutes les occurrences de "SchoolBridge" remplacées par "ElternGuide" dans tout le projet
+  - `app/layout.tsx` — titre de page et meta description
+  - `app/page.tsx` — landing page (logo, testimonials)
+  - `components/NavBar.tsx` — logo dans la navbar
+  - `components/ChatInterface.tsx` — message de bienvenue, barre de statut, disclaimer
+  - `app/select/page.tsx`, `app/register/page.tsx`, `app/dashboard/DashboardContent.tsx`
+  - `lib/prompts.ts` — system prompt IA + renommage de la constante `SCHOOLBRIDGE_SYSTEM_PROMPT` → `ELTERNGUIDE_SYSTEM_PROMPT`
+  - `app/api/chat/route.ts`, `app/api/upload/route.ts` — imports mis à jour
+  - `schoolbridge-data/community/posts.json` — "SchoolBridge Bot" → "ElternGuide Bot"
+  - Docs : `README.md`, `ARCHITECTURE.md`, `FEATURES.md`, `CHANGELOG.md`
+- Note : le dossier `schoolbridge-data/` n'est pas renommé (évite de casser les imports)
+
+#### Modification 2 — Composeur de post inline
+- Suppression du bouton flottant "Publier" et du modal de publication
+- Nouveau composant `InlineComposer` dans `CommunityPageContent.tsx` :
+  - Avatar du parent connecté (initiales + couleur rôle)
+  - Textarea expandable au focus (1 ligne → 4 lignes, transition douce)
+  - Badges de type (ℹ️ Info / ❓ Question / 🎉 Event) apparus au focus
+  - Boutons action : Attach (📎), Event (📅 toggle champ date), Mention (👤 décoratif)
+  - Bouton "Post" activé seulement quand du texte est présent
+  - Ajout d'image avec prévisualisation locale + bouton ✕ de suppression
+  - École cible (`ecole_cible`) auto-détectée : première école de l'enfant si onglet "School", sinon `null`
+  - Utilisateur non authentifié : message "Log in to post" à la place du composeur
+- `app/community/CommunityPageContent.tsx` — fetch `/api/parents/[id]` pour afficher le prénom dans le placeholder
+
 ## [v7.4.0] — 2026-03-15
 
 ### Correctif — Communauté + STT auto-envoi
@@ -23,7 +53,7 @@
   - POST-017 : Fatma Kılıç — question Nachhilfe
   - POST-018 : VHS Integrationskurse (Institution)
   - POST-019 : Maria Ionescu — question Ferienprogramm
-  - POST-020 : SchoolBridge Bot — explication bulletin de notes
+  - POST-020 : ElternGuide Bot — explication bulletin de notes
 
 - **`app/community/CommunityPageContent.tsx`** — corrections UI
   - Onglet « Mon école » renommé → « 🏫 École »
