@@ -6,7 +6,7 @@ export default function DashboardPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center text-slate-400">
-          Chargement du dashboard...
+          Loading dashboard...
         </div>
       }
     >

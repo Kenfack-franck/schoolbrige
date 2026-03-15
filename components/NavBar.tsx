@@ -36,7 +36,7 @@ export default function NavBar({ parentId, activePage, hideMobileBar = false }: 
       : []),
     {
       key: "community",
-      label: "Communauté",
+      label: "Community",
       icon: "👥",
       href: parentId ? `/community?parentId=${parentId}` : "/community",
     },
@@ -79,7 +79,7 @@ export default function NavBar({ parentId, activePage, hideMobileBar = false }: 
               href="/select"
               className="hidden md:block text-sm text-muted hover:text-primary transition-colors duration-200"
             >
-              Changer de profil
+              Switch profile
             </Link>
           ) : (
             <>
@@ -87,7 +87,7 @@ export default function NavBar({ parentId, activePage, hideMobileBar = false }: 
                 href="/select"
                 className="text-base text-primary border border-primary px-4 py-2 rounded-xl hover:bg-primary-lighter transition-all duration-200 font-medium"
               >
-                Se connecter
+                Log in
               </Link>
             </>
           )}

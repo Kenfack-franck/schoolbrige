@@ -107,8 +107,8 @@ export default function CommunityPageContent() {
 
       {/* Header */}
       <div className="bg-white border-b border-line px-6 py-3">
-        <h1 className="font-display font-bold text-lg text-foreground">Communauté</h1>
-        <p className="text-xs text-muted">Échanges entre parents et l&apos;école</p>
+        <h1 className="font-display font-bold text-lg text-foreground">Community</h1>
+        <p className="text-xs text-muted">Exchanges between parents and school</p>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-4 pb-20 md:pb-8">
@@ -125,7 +125,7 @@ export default function CommunityPageContent() {
                 }`}
                 style={activeTab === "ecole" ? { background: "var(--color-primary)" } : {}}
               >
-                🏫 École
+                🏫 School
               </button>
             )}
             <button
@@ -137,7 +137,7 @@ export default function CommunityPageContent() {
               }`}
               style={activeTab === "general" ? { background: "var(--color-primary)" } : {}}
             >
-              🌐 Général
+              🌐 General
             </button>
           </div>
 
@@ -147,7 +147,7 @@ export default function CommunityPageContent() {
               className="text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm"
               style={{ background: "var(--color-accent)" }}
             >
-              ✏️ Publier
+              ✏️ Post
             </button>
           )}
         </div>
@@ -156,13 +156,13 @@ export default function CommunityPageContent() {
         {loading ? (
           <div className="text-center text-muted py-16">
             <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-            Chargement...
+            Loading...
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center text-muted py-16">
-            <p className="text-base mb-1">Aucun message à afficher.</p>
+            <p className="text-base mb-1">No posts to display.</p>
             {parentId && activeTab === "ecole" && (
-              <p className="text-sm">Pas encore de messages pour votre école.</p>
+              <p className="text-sm">No posts for your school yet.</p>
             )}
           </div>
         ) : (
@@ -172,7 +172,7 @@ export default function CommunityPageContent() {
               <>
                 {pinned.length > 0 && (
                   <div>
-                    <SectionLabel label="Épinglés" count={pinned.length} />
+                    <SectionLabel label="Pinned" count={pinned.length} />
                     <div className="flex flex-col gap-3">
                       {pinned.map((post) => (
                         <CommunityPost key={post.id} post={post} parentId={parentId} />
@@ -182,7 +182,7 @@ export default function CommunityPageContent() {
                 )}
                 {unpinned.length > 0 && (
                   <div>
-                    {pinned.length > 0 && <SectionLabel label="Autres messages" count={unpinned.length} />}
+                    {pinned.length > 0 && <SectionLabel label="Other posts" count={unpinned.length} />}
                     <div className="flex flex-col gap-3">
                       {unpinned.map((post) => (
                         <CommunityPost key={post.id} post={post} parentId={parentId} />
@@ -198,7 +198,7 @@ export default function CommunityPageContent() {
               <>
                 {pinned.length > 0 && (
                   <div>
-                    <SectionLabel label="Épinglés" count={pinned.length} />
+                    <SectionLabel label="Pinned" count={pinned.length} />
                     <div className="flex flex-col gap-3">
                       {pinned.map((post) => (
                         <CommunityPost key={post.id} post={post} parentId={parentId} />
@@ -208,7 +208,7 @@ export default function CommunityPageContent() {
                 )}
                 {institutionalPosts.length > 0 && (
                   <div>
-                    <SectionLabel label="Infos école & institutions" count={institutionalPosts.length} />
+                    <SectionLabel label="School &amp; institution info" count={institutionalPosts.length} />
                     <div className="flex flex-col gap-3">
                       {institutionalPosts.map((post) => (
                         <CommunityPost key={post.id} post={post} parentId={parentId} />
@@ -218,7 +218,7 @@ export default function CommunityPageContent() {
                 )}
                 {communityPosts.length > 0 && (
                   <div>
-                    <SectionLabel label="Entraide entre parents" count={communityPosts.length} />
+                    <SectionLabel label="Parent support" count={communityPosts.length} />
                     <div className="flex flex-col gap-3">
                       {communityPosts.map((post) => (
                         <CommunityPost key={post.id} post={post} parentId={parentId} />
@@ -237,7 +237,7 @@ export default function CommunityPageContent() {
         <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 px-4 pb-4 sm:pb-0">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-base font-display font-bold text-foreground">Publier un message</h2>
+              <h2 className="text-base font-display font-bold text-foreground">Post a message</h2>
               <button
                 onClick={() => setPublishOpen(false)}
                 className="text-muted hover:text-foreground text-xl font-bold leading-none"
@@ -257,30 +257,30 @@ export default function CommunityPageContent() {
                 >
                   <option value="information">ℹ️ Information</option>
                   <option value="question">❓ Question</option>
-                  <option value="evenement">🎉 Événement</option>
+                  <option value="evenement">🎉 Event</option>
                 </select>
               </div>
               <div>
                 <label className="text-xs text-muted font-medium uppercase tracking-wide mb-1 block">
-                  Titre
+                  Title
                 </label>
                 <input
                   type="text"
                   value={publishTitle}
                   onChange={(e) => setPublishTitle(e.target.value)}
-                  placeholder="Titre de votre message..."
+                  placeholder="Title of your post..."
                   required
                   className="w-full border border-line rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
               </div>
               <div>
                 <label className="text-xs text-muted font-medium uppercase tracking-wide mb-1 block">
-                  Contenu
+                  Content
                 </label>
                 <textarea
                   value={publishContent}
                   onChange={(e) => setPublishContent(e.target.value)}
-                  placeholder="Votre message..."
+                  placeholder="Your message..."
                   required
                   rows={5}
                   className="w-full border border-line rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
@@ -292,7 +292,7 @@ export default function CommunityPageContent() {
                   onClick={() => setPublishOpen(false)}
                   className="px-4 py-2 rounded-xl text-sm text-muted hover:bg-canvas-muted transition-colors"
                 >
-                  Annuler
+                  Cancel
                 </button>
                 <button
                   type="submit"
@@ -300,7 +300,7 @@ export default function CommunityPageContent() {
                   className="px-5 py-2 text-white rounded-xl text-sm font-semibold disabled:opacity-50 transition-colors"
                   style={{ background: "var(--color-primary)" }}
                 >
-                  {publishing ? "Publication..." : "Publier"}
+                  {publishing ? "Publishing..." : "Post"}
                 </button>
               </div>
             </form>

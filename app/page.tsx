@@ -5,29 +5,29 @@ import Link from "next/link";
 const features = [
   {
     icon: "🌍",
-    title: "Multilingue natif",
-    description: "Parlez dans votre langue. L'agent comprend et répond sans effort — turc, arabe, ukrainien et 13 autres langues.",
+    title: "Natively multilingual",
+    description: "Speak in your language. The assistant understands and responds effortlessly — Turkish, Arabic, Ukrainian and 13 other languages.",
     accent: "#EBF4FB",
     iconBg: "#1B4B6B",
   },
   {
     icon: "📄",
-    title: "Lisez vos courriers",
-    description: "Photographiez une lettre de l'école. L'agent la traduit, l'explique et identifie les actions à faire.",
+    title: "Read your letters",
+    description: "Photograph a letter from school. The assistant translates it, explains it and identifies the actions to take.",
     accent: "#FEF3E8",
     iconBg: "#E8913A",
   },
   {
     icon: "👥",
-    title: "Communauté active",
-    description: "Connectez-vous avec d'autres parents et professionnels de l'école. Entraide et informations partagées.",
+    title: "Active community",
+    description: "Connect with other parents and school professionals. Mutual support and shared information.",
     accent: "#EDFAF3",
     iconBg: "#2D8A56",
   },
   {
     icon: "📅",
-    title: "Agenda intelligent",
-    description: "Ne manquez plus aucune date. Votre agenda scolaire est mis à jour automatiquement pendant le chat.",
+    title: "Smart agenda",
+    description: "Never miss a date again. Your school agenda is updated automatically during the chat.",
     accent: "#F3EDFB",
     iconBg: "#9B59B6",
   },
@@ -36,65 +36,65 @@ const features = [
 const steps = [
   {
     num: "1",
-    title: "Créez votre profil",
-    desc: "30 secondes. Votre langue, vos enfants, votre école.",
+    title: "Create your profile",
+    desc: "30 seconds. Your language, your children, your school.",
     icon: "✍️",
   },
   {
     num: "2",
-    title: "Posez vos questions",
-    desc: "Dans votre langue. L'agent comprend et répond avec des sources officielles.",
+    title: "Ask your questions",
+    desc: "In your language. The assistant understands and responds with official sources.",
     icon: "💬",
   },
   {
     num: "3",
-    title: "Agissez en confiance",
-    desc: "Agenda, contacts, documents — tout est organisé pour vous.",
+    title: "Act with confidence",
+    desc: "Agenda, contacts, documents — everything is organised for you.",
     icon: "✅",
   },
 ];
 
 const testimonials = [
   {
-    quote: "J'ai enfin compris le bulletin de notes de mon fils. L'agent me l'a expliqué en turc, avec tous les détails.",
+    quote: "I finally understood my son's report card. The assistant explained it to me in Turkish, with all the details.",
     name: "Fatma Y.",
-    role: "Mère de 2 enfants · Heilbronn",
+    role: "Mother of 2 children · Heilbronn",
     flag: "🇹🇷",
     color: "#E8913A",
   },
   {
-    quote: "Le courrier de l'école était en allemand, impossible à comprendre. En 30 secondes, SchoolBridge m'a tout traduit.",
+    quote: "The letter from school was in German, impossible to understand. In 30 seconds, SchoolBridge translated everything for me.",
     name: "Olena K.",
-    role: "Mère d'1 enfant · Heilbronn",
+    role: "Mother of 1 child · Heilbronn",
     flag: "🇺🇦",
     color: "#2A6F97",
   },
   {
-    quote: "J'ai trouvé un mediateur qui parle arabe grâce à la communauté. Je ne savais même pas que ce service existait.",
+    quote: "I found a mediator who speaks Arabic thanks to the community. I didn't even know this service existed.",
     name: "Ahmad M.",
-    role: "Père de 3 enfants · Heilbronn",
+    role: "Father of 3 children · Heilbronn",
     flag: "🇸🇾",
     color: "#2D8A56",
   },
 ];
 
 const languages = [
-  { flag: "🇹🇷", name: "Turc" },
-  { flag: "🇸🇦", name: "Arabe" },
-  { flag: "🇺🇦", name: "Ukrainien" },
-  { flag: "🇷🇺", name: "Russe" },
-  { flag: "🇵🇱", name: "Polonais" },
-  { flag: "🇷🇴", name: "Roumain" },
-  { flag: "🇬🇧", name: "Anglais" },
-  { flag: "🇫🇷", name: "Français" },
+  { flag: "🇹🇷", name: "Turkish" },
+  { flag: "🇸🇦", name: "Arabic" },
+  { flag: "🇺🇦", name: "Ukrainian" },
+  { flag: "🇷🇺", name: "Russian" },
+  { flag: "🇵🇱", name: "Polish" },
+  { flag: "🇷🇴", name: "Romanian" },
+  { flag: "🇬🇧", name: "English" },
+  { flag: "🇫🇷", name: "French" },
   { flag: "🇮🇷", name: "Farsi" },
   { flag: "🇦🇫", name: "Dari" },
-  { flag: "🇪🇸", name: "Espagnol" },
-  { flag: "🇮🇹", name: "Italien" },
-  { flag: "🇵🇹", name: "Portugais" },
-  { flag: "🇯🇵", name: "Japonais" },
+  { flag: "🇪🇸", name: "Spanish" },
+  { flag: "🇮🇹", name: "Italian" },
+  { flag: "🇵🇹", name: "Portuguese" },
+  { flag: "🇯🇵", name: "Japanese" },
   { flag: "🇪🇷", name: "Tigrinya" },
-  { flag: "🌐", name: "Autre" },
+  { flag: "🌐", name: "Other" },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -114,14 +114,14 @@ export default function Home() {
             href="/chat?parentId=PAR-001"
             className="text-sm text-muted hover:text-foreground transition-colors duration-200 hidden sm:block"
           >
-            Voir la démo
+            View demo
           </Link>
           <Link
             href="/register"
             className="text-sm font-semibold px-5 py-2 rounded-xl text-white transition-all duration-200 hover:opacity-90"
             style={{ background: "var(--color-primary)" }}
           >
-            S'inscrire
+            Sign up
           </Link>
         </nav>
       </header>
@@ -163,11 +163,11 @@ export default function Home() {
 
           {/* Tagline */}
           <p className="text-xl md:text-2xl text-white/70 font-medium mb-4 leading-relaxed">
-            La passerelle entre votre famille<br className="hidden md:block" /> et le système scolaire allemand.
+            The bridge between your family<br className="hidden md:block" /> and the German school system.
           </p>
 
           <p className="text-base text-white/50 max-w-md mx-auto mb-12">
-            Multilingue · Intelligent · Toujours disponible
+            Multilingual · Intelligent · Always available
           </p>
 
           {/* CTAs */}
@@ -182,13 +182,13 @@ export default function Home() {
               }}
             >
               <span>▶</span>
-              Essayer la démo
+              Try the demo
             </Link>
             <Link
               href="/register"
               className="inline-flex items-center gap-2 font-semibold text-base px-8 py-4 rounded-xl border-2 border-white/30 text-white hover:bg-white/10 transition-all duration-200 hover:border-white/50"
             >
-              Créer mon profil
+              Create my profile
             </Link>
           </div>
 
@@ -196,17 +196,17 @@ export default function Home() {
           <div className="mt-14 flex flex-wrap items-center justify-center gap-6 text-sm text-white/50">
             <span className="flex items-center gap-2">
               <span className="text-green-400">✓</span>
-              16 langues supportées
+              16 supported languages
             </span>
             <span className="w-px h-4 bg-white/20 hidden sm:block" />
             <span className="flex items-center gap-2">
               <span className="text-green-400">✓</span>
-              Propulsé par Gemini 2.5 Flash
+              Powered by Gemini 2.5 Flash
             </span>
             <span className="w-px h-4 bg-white/20 hidden sm:block" />
             <span className="flex items-center gap-2">
               <span className="text-green-400">✓</span>
-              Gratuit · Open source
+              Free · Open source
             </span>
           </div>
         </div>
@@ -216,10 +216,10 @@ export default function Home() {
       <section className="bg-white border-b border-line py-6 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { val: "16", label: "Langues supportées", color: "#1B4B6B" },
-            { val: "4", label: "Fonctionnalités clés", color: "#E8913A" },
-            { val: "< 3s", label: "Temps de réponse", color: "#2D8A56" },
-            { val: "24/7", label: "Disponible", color: "#9B59B6" },
+            { val: "16", label: "Supported languages", color: "#1B4B6B" },
+            { val: "4", label: "Key features", color: "#E8913A" },
+            { val: "< 3s", label: "Response time", color: "#2D8A56" },
+            { val: "24/7", label: "Available", color: "#9B59B6" },
           ].map((s) => (
             <div key={s.label} className="flex flex-col items-center gap-1">
               <span className="font-display font-bold text-3xl" style={{ color: s.color }}>{s.val}</span>
@@ -234,10 +234,10 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="font-display font-bold text-3xl md:text-4xl text-foreground mb-4">
-              Tout ce dont vous avez besoin
+              Everything you need
             </h2>
             <p className="text-muted text-lg max-w-lg mx-auto">
-              Un outil complet pour naviguer le système scolaire allemand en toute confiance.
+              A complete tool to navigate the German school system with confidence.
             </p>
           </div>
 
@@ -267,10 +267,10 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="font-display font-bold text-3xl md:text-4xl text-foreground mb-4">
-              Prêt en 30 secondes
+              Ready in 30 seconds
             </h2>
             <p className="text-muted text-lg">
-              Pas d'installation. Pas d'attente. Ouvrez le chat et commencez.
+              No installation. No waiting. Open the chat and get started.
             </p>
           </div>
 
@@ -309,14 +309,14 @@ export default function Home() {
               className="flex items-center justify-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-xl border-2 text-primary hover:bg-primary-lighter transition-all duration-200"
               style={{ borderColor: "var(--color-primary)" }}
             >
-              Créer mon profil
+              Create my profile
             </Link>
             <Link
               href="/chat?parentId=PAR-001"
               className="flex items-center justify-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-xl text-white transition-all duration-200 hover:opacity-90"
               style={{ background: "var(--color-primary)" }}
             >
-              Tester la démo →
+              Try the demo →
             </Link>
           </div>
         </div>
@@ -327,7 +327,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="font-display font-bold text-3xl md:text-4xl text-foreground mb-4">
-              Ce que disent les parents
+              What parents say
             </h2>
           </div>
 
@@ -365,7 +365,7 @@ export default function Home() {
       <section className="py-16 px-6 bg-white border-t border-line">
         <div className="max-w-4xl mx-auto">
           <p className="text-center text-sm font-semibold text-muted uppercase tracking-widest mb-8">
-            Langues supportées
+            Supported languages
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {languages.map((l) => (
@@ -393,23 +393,23 @@ export default function Home() {
         </div>
         <div className="relative z-10 max-w-2xl mx-auto text-center">
           <h2 className="font-display font-bold text-3xl md:text-4xl text-white mb-4">
-            Commencez maintenant — c'est gratuit
+            Start now — it&apos;s free
           </h2>
           <p className="text-white/60 text-lg mb-10">
-            Rejoignez les familles qui naviguent le système scolaire allemand avec confiance.
+            Join the families navigating the German school system with confidence.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/register"
               className="inline-flex items-center justify-center gap-2 font-display font-semibold text-base px-8 py-4 rounded-xl text-primary bg-white hover:bg-white/90 transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5"
             >
-              Créer mon profil gratuitement
+              Create my profile for free
             </Link>
             <Link
               href="/chat?parentId=PAR-001"
               className="inline-flex items-center justify-center gap-2 font-semibold text-base px-8 py-4 rounded-xl border-2 border-white/30 text-white hover:bg-white/10 transition-all duration-200"
             >
-              Voir la démo →
+              View demo →
             </Link>
           </div>
         </div>
@@ -428,10 +428,10 @@ export default function Home() {
           </span>
           <div className="flex items-center gap-4">
             <Link href="/register" className="hover:text-foreground transition-colors">
-              S'inscrire
+              Sign up
             </Link>
             <Link href="/community" className="hover:text-foreground transition-colors">
-              Communauté
+              Community
             </Link>
           </div>
         </div>

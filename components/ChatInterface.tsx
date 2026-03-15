@@ -125,18 +125,19 @@ function splitForTTS(text: string): string[] {
   return chunks.length ? chunks : [text.trim()];
 }
 
-function speakText(text: string, lang: string): void {
+function speakText(text: string, lang: string, onEnd?: () => void): void {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const clean = stripMarkdown(text);
   const chunks = splitForTTS(clean);
   function speakChunk(idx: number) {
-    if (idx >= chunks.length) return;
+    if (idx >= chunks.length) { onEnd?.(); return; }
     const utt = new SpeechSynthesisUtterance(chunks[idx]);
     utt.lang = lang;
     utt.rate = 1.15;
     utt.pitch = 1;
     utt.onend = () => speakChunk(idx + 1);
+    utt.onerror = () => { onEnd?.(); };
     window.speechSynthesis.speak(utt);
   }
   speakChunk(0);
@@ -231,6 +232,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [hasTTS, setHasTTS] = useState(false);
   const [hasSTT, setHasSTT] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [interimText, setInterimText] = useState("");
   const [pendingAgendaItems, setPendingAgendaItems] = useState<
@@ -298,7 +300,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
     pendingSTTTextRef.current = "";
     setInput("");
     if (inputRef.current) inputRef.current.style.height = "auto";
-    stopSpeech();
+    handleStopSpeech();
     isSearchingSpeechActiveRef.current = false;
     pendingResponseTextRef.current = null;
     isSubmittingRef.current = true;
@@ -346,11 +348,11 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           .join("\n");
 
         const welcomeText = [
-          `Bienvenue sur SchoolBridge, ${prenom} ! 👋`,
+          `Welcome to SchoolBridge, ${prenom}! 👋`,
           "",
-          enfants.length > 0 ? `Vos enfants enregistrés :\n${childLines}` : "Aucun enfant enregistré.",
+          enfants.length > 0 ? `Your registered children:\n${childLines}` : "No children registered.",
           "",
-          "Posez-moi vos questions dans votre langue, je vous répondrai dans cette même langue.",
+          "Ask me your questions in your language and I will reply in the same language.",
         ].join("\n");
 
         const welcomeMsg: Message = {
@@ -376,7 +378,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
         setMessages([{
           id: crypto.randomUUID(),
           role: "assistant",
-          content: "Bienvenue sur SchoolBridge ! 👋\n\nComment puis-je vous aider ?",
+          content: "Welcome to SchoolBridge! 👋\n\nHow can I help you?",
           isWelcome: true,
         }]);
       });
@@ -433,6 +435,19 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
     setPendingContacts(null);
     setCommunityNotification(null);
     stopSpeech();
+    setIsSpeaking(false);
+  }
+
+  // ── TTS helpers ───────────────────────────────────────────────────────────
+
+  function handleSpeak(text: string, lang: string) {
+    setIsSpeaking(true);
+    speakText(text, lang, () => setIsSpeaking(false));
+  }
+
+  function handleStopSpeech() {
+    stopSpeech();
+    setIsSpeaking(false);
   }
 
   // ── STT ───────────────────────────────────────────────────────────────────
@@ -451,7 +466,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
     recognition.continuous = true;
     recognition.interimResults = true;
 
-    let accumulated = ""; // texte final cumulé dans cette session
+    let accumulated = ""; // final text accumulated in this session
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onresult = (event: any) => {
@@ -478,7 +493,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onerror = (event: any) => {
       if ((event.error as string) === "not-allowed") {
-        alert("Accès au microphone refusé. Veuillez autoriser l'accès dans les paramètres de votre navigateur.");
+        alert("Microphone access denied. Please allow access in your browser settings.");
       }
       setIsListening(false);
       setInterimText("");
@@ -487,7 +502,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
     recognition.onend = () => {
       setIsListening(false);
       setInterimText("");
-      // Si du texte a été capturé, déclencher l'envoi automatique
+      // If text was captured, trigger automatic submission
       if (accumulated.trim() && !isSubmittingRef.current) {
         pendingSTTTextRef.current = accumulated.trim();
         setSttSubmitTrigger((n) => n + 1); // toujours un changement → useEffect se déclenche
@@ -572,7 +587,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                     const pending = pendingResponseTextRef.current;
                     if (pending !== null) {
                       pendingResponseTextRef.current = null;
-                      setTimeout(() => speakText(pending, parentLangRef.current), 400);
+                      setTimeout(() => handleSpeak(pending, parentLangRef.current), 400);
                     }
                   };
                   window.speechSynthesis.speak(utt);
@@ -581,7 +596,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                 setMessages((prev) =>
                   prev.map((m) =>
                     m.id === STREAM_ID
-                      ? { ...m, id: crypto.randomUUID(), content: (data.message as string) ?? "Erreur.", status: "error" }
+                      ? { ...m, id: crypto.randomUUID(), content: (data.message as string) ?? "Error.", status: "error" }
                       : m
                   )
                 );
@@ -655,14 +670,14 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           if (isSearchingSpeechActiveRef.current) {
             pendingResponseTextRef.current = text;
           } else {
-            speakText(text, parentLangRef.current);
+            handleSpeak(text, parentLangRef.current);
           }
         });
       } catch {
         setMessages((prev) =>
           prev.map((m) =>
             m.id === STREAM_ID
-              ? { ...m, id: crypto.randomUUID(), content: "Erreur réseau. Veuillez réessayer.", status: "error" }
+              ? { ...m, id: crypto.randomUUID(), content: "Network error. Please try again.", status: "error" }
               : m
           )
         );
@@ -700,14 +715,14 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           if (isSearchingSpeechActiveRef.current) {
             pendingResponseTextRef.current = text;
           } else {
-            speakText(text, parentLangRef.current);
+            handleSpeak(text, parentLangRef.current);
           }
         });
       } catch {
         setMessages((prev) =>
           prev.map((m) =>
             m.id === STREAM_ID
-              ? { ...m, id: crypto.randomUUID(), content: "Erreur réseau. Veuillez réessayer.", status: "error" }
+              ? { ...m, id: crypto.randomUUID(), content: "Network error. Please try again.", status: "error" }
               : m
           )
         );
@@ -731,7 +746,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 10 * 1024 * 1024) { alert("Fichier trop volumineux (max 10 MB)."); return; }
+    if (file.size > 10 * 1024 * 1024) { alert("File too large (max 10 MB)."); return; }
     setSelectedFile(file);
     if (file.type === "application/pdf") {
       setFilePreview("__pdf__");
@@ -753,7 +768,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
     if ((!text && !selectedFile) || isLoading || isSubmittingRef.current) return;
 
     isSubmittingRef.current = true;
-    stopSpeech();
+    handleStopSpeech();
     isSearchingSpeechActiveRef.current = false;
     pendingResponseTextRef.current = null;
     if (isListening) stopListening();
@@ -830,7 +845,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
             <p className="text-sm font-semibold text-white leading-tight">SchoolBridge</p>
             <span className="flex items-center gap-1.5 text-[11px] text-white/50">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0 animate-pulse" />
-              Assistant IA · En ligne
+              AI Assistant · Online
             </span>
           </div>
         </div>
@@ -862,7 +877,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                   )}
                 </>
               ) : (
-                <p className="text-[11px] text-white/40">Chargement…</p>
+                <p className="text-[11px] text-white/40">Loading…</p>
               )}
             </div>
           </div>
@@ -876,7 +891,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               type="button"
               onClick={handleClear}
               disabled={isLoading}
-              title="Effacer la conversation"
+              title="Clear conversation"
               className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-40 text-sm"
             >
               🗑️
@@ -886,7 +901,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
             <button
               type="button"
               onClick={() => setAutoSpeak((v) => !v)}
-              title={autoSpeak ? "Désactiver la lecture automatique" : "Activer la lecture automatique"}
+              title={autoSpeak ? "Disable auto-read" : "Enable auto-read"}
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors ${
                 autoSpeak
                   ? "bg-white/20 text-white"
@@ -900,7 +915,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
             <button
               type="button"
               onClick={() => setNotifPanelOpen((v) => !v)}
-              title={`${urgentCount} message${urgentCount > 1 ? "s" : ""} urgent${urgentCount > 1 ? "s" : ""}`}
+              title={`${urgentCount} urgent message${urgentCount > 1 ? "s" : ""}`}
               className="xl:hidden relative w-8 h-8 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
             >
               <span className="text-sm">🔔</span>
@@ -937,7 +952,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               }}
             >
               <ReactMarkdown components={MD_COMPONENTS}>
-                {"Bienvenue sur SchoolBridge ! 👋\n\nJe suis votre mentor scolaire. Posez-moi vos questions sur le système scolaire allemand dans votre langue."}
+                {"Welcome to SchoolBridge! 👋\n\nI am your school mentor. Ask me your questions about the German school system in your language."}
               </ReactMarkdown>
             </div>
           </div>
@@ -970,10 +985,10 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                   {/* Card header */}
                   <div className="px-5 pt-4 pb-3">
                     <p className="font-display font-bold text-primary text-base leading-snug">
-                      Bonjour, {parentMeta.prenom} ! 👋
+                      Hello, {parentMeta.prenom}! 👋
                     </p>
                     <p className="text-xs text-muted mt-0.5">
-                      Je suis votre mentor scolaire personnalisé pour le système allemand.
+                      I am your personalised school mentor for the German system.
                     </p>
                   </div>
 
@@ -981,7 +996,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                   {parentMeta.enfants.length > 0 && (
                     <div className="px-4 pb-3 flex flex-col gap-2">
                       <p className="text-xs font-semibold text-muted uppercase tracking-wide px-1">
-                        Vos enfants
+                        Your children
                       </p>
                       {parentMeta.enfants.map((child, i) => (
                         <div
@@ -1010,7 +1025,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                   {/* Bottom hint */}
                   <div className="px-5 pb-4">
                     <p className="text-xs text-muted">
-                      Posez vos questions dans votre langue, je vous réponds dans cette même langue.
+                      Ask your questions in your language and I will reply in the same language.
                     </p>
                   </div>
                 </div>
@@ -1046,7 +1061,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                   {msg.imagePreview && msg.imagePreview !== "__pdf__" && (
                     <img
                       src={msg.imagePreview}
-                      alt="Document envoyé"
+                      alt="Sent document"
                       className="max-w-[200px] rounded-lg mb-2 object-contain"
                     />
                   )}
@@ -1166,16 +1181,16 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                     <div className="mt-1.5 flex gap-2">
                       <button
                         type="button"
-                        onClick={() => speakText(msg.content, parentLangRef.current)}
-                        title="Lire ce message"
+                        onClick={() => handleSpeak(msg.content, parentLangRef.current)}
+                        title="Read this message"
                         className="text-muted hover:text-foreground transition-colors text-sm leading-none"
                       >
                         🔊
                       </button>
                       <button
                         type="button"
-                        onClick={stopSpeech}
-                        title="Arrêter la lecture"
+                        onClick={handleStopSpeech}
+                        title="Stop reading"
                         className="text-muted hover:text-foreground transition-colors text-sm leading-none"
                       >
                         ⏹
@@ -1212,7 +1227,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           <div className="self-stretch bg-success-light border border-success rounded-2xl px-4 py-3 text-sm">
             <div className="flex items-center justify-between mb-2">
               <p className="font-semibold text-success">
-                📅 {pendingAgendaItems.length} événement{pendingAgendaItems.length > 1 ? "s" : ""} ajouté{pendingAgendaItems.length > 1 ? "s" : ""} à votre agenda
+                📅 {pendingAgendaItems.length} event{pendingAgendaItems.length > 1 ? "s" : ""} added to your agenda
               </p>
               <button
                 onClick={() => setPendingAgendaItems(null)}
@@ -1224,7 +1239,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                 <li key={i} className="text-success flex items-center gap-2">
                   <span>{getAgendaIcon(item.type)}</span>
                   <span className="font-medium">{item.titre}</span>
-                  <span className="opacity-80">— {item.date}{item.heure ? ` à ${item.heure}` : ""}</span>
+                  <span className="opacity-80">— {item.date}{item.heure ? ` at ${item.heure}` : ""}</span>
                 </li>
               ))}
             </ul>
@@ -1233,7 +1248,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                 href={`/dashboard?parentId=${parentId}`}
                 className="mt-2 inline-block text-xs text-success underline font-medium"
               >
-                Voir dans le dashboard →
+                View in dashboard →
               </a>
             )}
           </div>
@@ -1252,11 +1267,11 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                       </p>
                       <p className="text-muted text-xs mt-0.5">{contact.role}</p>
                       {contact.disponibilite && (
-                        <p className="text-muted text-xs mt-0.5">Disponible : {contact.disponibilite}</p>
+                        <p className="text-muted text-xs mt-0.5">Available: {contact.disponibilite}</p>
                       )}
                       {contact.sujets_expertise?.length > 0 && (
                         <p className="text-muted text-xs mt-0.5">
-                          Expertise : {contact.sujets_expertise.join(", ")}
+                          Expertise: {contact.sujets_expertise.join(", ")}
                         </p>
                       )}
                     </div>
@@ -1266,7 +1281,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                         className="shrink-0 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
                         style={{ background: "var(--color-primary)" }}
                       >
-                        Envoyer un message
+                        Send a message
                       </button>
                     )}
                   </div>
@@ -1279,16 +1294,16 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                       <p className="text-muted text-xs mt-0.5">{contact.ecole_rattachee}</p>
                     )}
                     {contact.disponibilite && (
-                      <p className="text-muted text-xs mt-0.5">Horaires : {contact.disponibilite}</p>
+                      <p className="text-muted text-xs mt-0.5">Hours: {contact.disponibilite}</p>
                     )}
                     {contact.contact_externe?.telephone && (
                       <a href={`tel:${contact.contact_externe.telephone}`} className="block text-primary text-xs mt-0.5 underline">
-                        Tél : {contact.contact_externe.telephone}
+                        Tel: {contact.contact_externe.telephone}
                       </a>
                     )}
                     {contact.contact_externe?.email && (
                       <a href={`mailto:${contact.contact_externe.email}`} className="block text-primary text-xs mt-0.5 underline">
-                        Email : {contact.contact_externe.email}
+                        Email: {contact.contact_externe.email}
                       </a>
                     )}
                     {contact.contact_externe?.adresse && (
@@ -1302,7 +1317,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               onClick={() => setPendingContacts(null)}
               className="self-end text-xs text-muted hover:text-foreground"
             >
-              ✕ Masquer
+              ✕ Hide
             </button>
           </div>
         )}
@@ -1311,7 +1326,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
         {communityNotification && (
           <div className="self-stretch bg-canvas-muted border border-line rounded-2xl px-4 py-3 text-sm flex items-start justify-between gap-2">
             <p className="text-foreground">
-              📢 Votre question a été posée dans la communauté :{" "}
+              📢 Your question has been posted in the community:{" "}
               <span className="font-semibold">{communityNotification}</span>
             </p>
             <button
@@ -1327,10 +1342,10 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
         {messages.filter((m) => m.role === "user").length === 0 && !isLoading && (
           <div className="flex flex-wrap gap-2 mt-2">
             {[
-              { icon: "📝", label: "Inscrire mon enfant à l'école", color: "#EBF4FB", iconColor: "#1B4B6B" },
-              { icon: "📅", label: "Vacances scolaires", color: "#EDFAF3", iconColor: "#2D8A56" },
-              { icon: "📊", label: "Comprendre le bulletin", color: "#FEF3E8", iconColor: "#E8913A" },
-              { icon: "📚", label: "Aide aux devoirs", color: "#F3EDFB", iconColor: "#9B59B6" },
+              { icon: "📝", label: "Enroll my child in school", color: "#EBF4FB", iconColor: "#1B4B6B" },
+              { icon: "📅", label: "School holidays", color: "#EDFAF3", iconColor: "#2D8A56" },
+              { icon: "📊", label: "Understanding the report card", color: "#FEF3E8", iconColor: "#E8913A" },
+              { icon: "📚", label: "Homework help", color: "#F3EDFB", iconColor: "#9B59B6" },
             ].map(({ icon, label, color, iconColor }) => (
               <button
                 key={label}
@@ -1370,7 +1385,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           ) : filePreview ? (
             <img
               src={filePreview}
-              alt="Aperçu"
+              alt="Preview"
               className="h-12 w-auto rounded-xl border border-line object-contain bg-white"
             />
           ) : null}
@@ -1397,6 +1412,30 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
       <div className="max-w-3xl mx-auto w-full px-4 pb-4 pt-2"
         style={{ background: "linear-gradient(0deg, #F3F7FA 0%, #F3F7FA 100%)" }}
       >
+        {/* Stop reading banner — visible when TTS is active */}
+        {isSpeaking && (
+          <div className="flex items-center justify-between mb-2 px-4 py-2.5 rounded-xl border border-primary/20 bg-primary-lighter">
+            <div className="flex items-center gap-2.5">
+              <span className="flex gap-0.5">
+                {[0,1,2].map(i => (
+                  <span key={i} className="block w-0.5 h-3.5 rounded-full bg-primary"
+                    style={{ animation: "dot-bounce 1.2s ease-in-out infinite", animationDelay: `${i * 150}ms` }} />
+                ))}
+              </span>
+              <span className="text-sm font-medium text-primary">Reading response…</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleStopSpeech}
+              className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-lg text-white transition-all duration-200 hover:opacity-90 active:scale-95"
+              style={{ background: "var(--color-primary)" }}
+            >
+              <span>⏹</span>
+              Stop
+            </button>
+          </div>
+        )}
+
         <form
           onSubmit={handleSubmit}
           className="flex items-end gap-2 p-2 rounded-2xl border border-line/80 bg-white"
@@ -1408,7 +1447,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
               type="button"
               onClick={toggleListening}
               disabled={isLoading}
-              title={isListening ? "Arrêter la dictée" : "Dicter un message"}
+              title={isListening ? "Stop dictation" : "Dictate a message"}
               className={`shrink-0 w-10 h-10 rounded-xl text-lg flex items-center justify-center transition-all duration-200 disabled:opacity-40 ${
                 isListening
                   ? "bg-red-50 text-red-500 animate-pulse"
@@ -1428,10 +1467,10 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
             rows={1}
             placeholder={
               isListening
-                ? "Parlez maintenant…"
+                ? "Speak now…"
                 : selectedFile
-                ? "Ajouter un message (optionnel)…"
-                : "Posez votre question…"
+                ? "Add a message (optional)…"
+                : "Ask your question…"
             }
             disabled={isLoading}
             className="flex-1 px-3 py-2.5 text-base focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed bg-transparent"
@@ -1446,7 +1485,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isLoading}
-            title="Envoyer un document (image ou PDF)"
+            title="Send a document (image or PDF)"
             className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-muted hover:text-primary hover:bg-canvas-soft transition-all duration-200 disabled:opacity-40 text-lg"
           >
             📎
@@ -1463,7 +1502,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           <button
             type="submit"
             disabled={isLoading || !hasInput}
-            title="Envoyer"
+            title="Send"
             className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-white text-base font-bold transition-all duration-200 disabled:cursor-not-allowed"
             style={{
               background: hasInput && !isLoading
@@ -1480,7 +1519,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
 
         {/* Disclaimer */}
         <p className="text-center text-[11px] text-muted/60 mt-2">
-          SchoolBridge peut faire des erreurs. Vérifiez les informations importantes auprès de l&apos;école.
+          SchoolBridge may make mistakes. Verify important information with the school.
         </p>
       </div>
 
@@ -1499,7 +1538,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-line">
               <h2 className="font-display font-bold text-foreground text-base">
-                🔔 Messages urgents
+                🔔 Urgent messages
               </h2>
               <button
                 onClick={() => setNotifPanelOpen(false)}
@@ -1525,14 +1564,14 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                   href={`/community?parentId=${parentId}`}
                   className="text-sm font-medium text-primary hover:underline"
                 >
-                  Voir la communauté →
+                  View community →
                 </a>
               )}
               <button
                 onClick={dismissUrgentBanner}
                 className="text-xs text-muted hover:text-foreground"
               >
-                Marquer comme lu
+                Mark as read
               </button>
             </div>
           </aside>
@@ -1545,7 +1584,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-line">
               <h2 className="font-display font-bold text-foreground text-base">
-                🔔 Messages urgents
+                🔔 Urgent messages
               </h2>
               <button
                 onClick={() => setNotifPanelOpen(false)}
@@ -1571,14 +1610,14 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                   href={`/community?parentId=${parentId}`}
                   className="text-sm font-medium text-primary hover:underline"
                 >
-                  Voir la communauté →
+                  View community →
                 </a>
               )}
               <button
                 onClick={dismissUrgentBanner}
                 className="text-xs text-muted hover:text-foreground"
               >
-                Marquer comme lu
+                Mark as read
               </button>
             </div>
           </aside>
@@ -1606,7 +1645,7 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
         <aside className="hidden xl:flex flex-col w-80 shrink-0 border-l border-line bg-white overflow-y-auto">
           <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 bg-white z-10">
             <h2 className="font-display font-bold text-foreground text-sm">
-              🔔 Messages urgents
+              🔔 Urgent messages
             </h2>
             <span
               className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
@@ -1632,14 +1671,14 @@ export default function ChatInterface({ parentId }: ChatInterfaceProps) {
                 href={`/community?parentId=${parentId}`}
                 className="text-xs font-medium text-primary hover:underline"
               >
-                Voir la communauté →
+                View community →
               </a>
             )}
             <button
               onClick={dismissUrgentBanner}
               className="text-[10px] text-muted hover:text-foreground"
             >
-              Marquer comme lu
+              Mark as read
             </button>
           </div>
         </aside>
@@ -1681,7 +1720,7 @@ function NotifPostCard({ post, translated, translating, onTranslate }: NotifPost
           className="self-start text-xs font-medium transition-colors disabled:opacity-50"
           style={{ color: "var(--color-primary-light)" }}
         >
-          {translating ? "Traduction…" : "🌐 Traduire"}
+          {translating ? "Translating…" : "🌐 Translate"}
         </button>
       )}
     </div>

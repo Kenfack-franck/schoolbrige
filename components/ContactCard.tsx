@@ -109,7 +109,7 @@ export default function ContactCard({ personne, contexte, parentId, onContact }:
           className="w-full flex items-center justify-center gap-1.5 text-white text-sm font-semibold py-2.5 rounded-xl transition-all duration-200 disabled:opacity-40"
           style={{ background: "var(--color-primary)" }}
         >
-          📨 Envoyer un message
+          📨 Send a message
         </button>
       ) : (
         <div className="flex flex-col gap-1.5">
@@ -130,7 +130,7 @@ export default function ContactCard({ personne, contexte, parentId, onContact }:
             </a>
           )}
           {!personne.contact_externe?.telephone && !personne.contact_externe?.email && (
-            <p className="text-sm text-muted text-center">Contact externe uniquement</p>
+            <p className="text-sm text-muted text-center">External contact only</p>
           )}
         </div>
       )}

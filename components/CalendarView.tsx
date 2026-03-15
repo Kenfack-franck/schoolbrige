@@ -20,17 +20,17 @@ export interface AgendaItem {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+const JOURS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const MOIS_FR = [
-  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
 ];
 
 const MOIS_PARSE: [string, number][] = [
-  ["janvier", 1], ["février", 2], ["mars", 3], ["avril", 4],
-  ["mai", 5], ["juin", 6], ["juillet", 7], ["août", 8],
-  ["septembre", 9], ["octobre", 10], ["novembre", 11], ["décembre", 12],
+  ["january", 1], ["february", 2], ["march", 3], ["april", 4],
+  ["may", 5], ["june", 6], ["july", 7], ["august", 8],
+  ["september", 9], ["october", 10], ["november", 11], ["december", 12],
 ];
 
 export const TYPE_DOT_COLOR: Record<AgendaItem["type"], string> = {
@@ -44,13 +44,13 @@ export const TYPE_DOT_COLOR: Record<AgendaItem["type"], string> = {
 };
 
 export const TYPE_LABEL: Record<AgendaItem["type"], string> = {
-  reunion:  "Réunion",
-  examen:   "Examen",
-  echeance: "Échéance",
-  tache:    "Tâche",
-  vacances: "Vacances",
-  evenement:"Événement",
-  bulletin: "Bulletin",
+  reunion:  "Meeting",
+  examen:   "Exam",
+  echeance: "Deadline",
+  tache:    "Task",
+  vacances: "Holidays",
+  evenement:"Event",
+  bulletin: "Report card",
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -308,7 +308,7 @@ export default function CalendarView({ events }: CalendarViewProps) {
       }) && (
         <div className="border-t border-line px-4 py-2 flex items-center gap-2">
           <span className="w-3 h-3 rounded-sm bg-green-100 border border-green-300 shrink-0" />
-          <span className="text-[11px] text-muted">Vacances scolaires</span>
+          <span className="text-[11px] text-muted">School holidays</span>
         </div>
       )}
     </div>

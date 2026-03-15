@@ -17,19 +17,19 @@ function daysDiff(dateStr: string): number {
 
 function formatRelative(dateStr: string): string {
   const diff = daysDiff(dateStr);
-  if (diff === 0) return "Aujourd'hui";
-  if (diff === 1) return "Demain";
-  if (diff === -1) return "Hier";
-  if (diff > 1 && diff <= 6) return `Dans ${diff} jours`;
-  if (diff > 6 && diff <= 13) return `Dans ${diff} jours`;
-  if (diff < 0) return `Il y a ${Math.abs(diff)} jours`;
+  if (diff === 0) return "Today";
+  if (diff === 1) return "Tomorrow";
+  if (diff === -1) return "Yesterday";
+  if (diff > 1 && diff <= 6) return `In ${diff} days`;
+  if (diff > 6 && diff <= 13) return `In ${diff} days`;
+  if (diff < 0) return `${Math.abs(diff)} days ago`;
   const d = new Date(dateStr + "T00:00:00");
-  return `Le ${d.getDate()} ${["jan","fév","mar","avr","mai","jun","jul","aoû","sep","oct","nov","déc"][d.getMonth()]}`;
+  return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]} ${d.getDate()}`;
 }
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
 function getTypeIcon(type: AgendaItem["type"]): string {
@@ -53,8 +53,8 @@ export default function AgendaListView({ events, onToggleDone }: AgendaListViewP
   if (events.length === 0) {
     return (
       <div className="bg-white rounded-2xl border border-line p-8 text-center" style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}>
-        <p className="text-muted text-sm">Aucun événement dans l&apos;agenda.</p>
-        <p className="text-xs text-muted mt-1">Les événements ajoutés via le chat apparaîtront ici.</p>
+        <p className="text-muted text-sm">No events in the agenda.</p>
+        <p className="text-xs text-muted mt-1">Events added via the chat will appear here.</p>
       </div>
     );
   }
@@ -90,7 +90,7 @@ export default function AgendaListView({ events, onToggleDone }: AgendaListViewP
           const isOverdue = isPast && !item.fait && (item.type === "tache" || item.type === "echeance");
           const isDone = item.fait;
           const diff = daysDiff(item.date);
-          const dateLabel = isOverdue ? "En retard" : formatRelative(item.date);
+          const dateLabel = isOverdue ? "Overdue" : formatRelative(item.date);
           const showSeparator = !isDone && dateLabel !== lastDateLabel;
           if (!isDone) lastDateLabel = dateLabel;
 
@@ -159,7 +159,7 @@ export default function AgendaListView({ events, onToggleDone }: AgendaListViewP
                         </span>
                         {isOverdue && (
                           <span className="text-xs font-semibold text-white bg-red-500 px-2 py-0.5 rounded-full shrink-0">
-                            En retard
+                            Overdue
                           </span>
                         )}
                       </div>
@@ -189,9 +189,9 @@ export default function AgendaListView({ events, onToggleDone }: AgendaListViewP
                             ? "bg-success text-white"
                             : "border border-line text-muted hover:border-success hover:text-success"
                         }`}
-                        title={isDone ? "Marquer comme non fait" : "Marquer comme fait"}
+                        title={isDone ? "Mark as not done" : "Mark as done"}
                       >
-                        {isDone ? "✓ Fait" : "✓ Fait"}
+                        {isDone ? "✓ Done" : "✓ Done"}
                       </button>
                     )}
                   </div>

@@ -31,13 +31,13 @@ function getMoyenneInfo(m: number | null): {
   labelColor: string;
 } {
   if (m === null) {
-    return { barColor: "", barWidth: "0%", label: "Pas encore évalué", labelColor: "#6B7280" };
+    return { barColor: "", barWidth: "0%", label: "Not yet assessed", labelColor: "#6B7280" };
   }
   const pct = Math.round(((6 - m) / 5) * 100);
   if (m <= 2.0) return { barColor: "#22c55e", barWidth: `${Math.min(pct, 95)}%`, label: "Excellent", labelColor: "#15803d" };
-  if (m <= 3.0) return { barColor: "#eab308", barWidth: `${pct}%`, label: "Bon", labelColor: "#a16207" };
-  if (m <= 4.0) return { barColor: "#f97316", barWidth: `${pct}%`, label: "Moyen", labelColor: "#c2410c" };
-  return { barColor: "#ef4444", barWidth: `${Math.min(pct, 95)}%`, label: "En difficulté", labelColor: "#b91c1c" };
+  if (m <= 3.0) return { barColor: "#eab308", barWidth: `${pct}%`, label: "Good", labelColor: "#a16207" };
+  if (m <= 4.0) return { barColor: "#f97316", barWidth: `${pct}%`, label: "Average", labelColor: "#c2410c" };
+  return { barColor: "#ef4444", barWidth: `${Math.min(pct, 95)}%`, label: "Struggling", labelColor: "#b91c1c" };
 }
 
 function getNoteClass(n: number): string {
@@ -90,7 +90,7 @@ export default function ChildCard({ child, colorIndex }: ChildCardProps) {
       {child.moyenne_generale !== null ? (
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted">Moyenne générale</span>
+            <span className="text-muted">Overall average</span>
             <div className="flex items-center gap-2">
               <span className="font-bold text-foreground text-base">{child.moyenne_generale}</span>
               <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ color: labelColor, background: `${labelColor}18` }}>
@@ -108,7 +108,7 @@ export default function ChildCard({ child, colorIndex }: ChildCardProps) {
       ) : (
         <div className="flex items-center gap-2 text-base text-muted bg-canvas-soft rounded-xl px-4 py-2.5">
           <span>📝</span>
-          <span>Pas encore évalué</span>
+          <span>Not yet assessed</span>
         </div>
       )}
 
@@ -118,7 +118,7 @@ export default function ChildCard({ child, colorIndex }: ChildCardProps) {
           {/* Points forts */}
           <div>
             <p className="text-sm font-semibold text-green-700 flex items-center gap-1 mb-2">
-              ✅ Points forts
+              ✅ Strengths
             </p>
             <div className="flex flex-col gap-1.5">
               {noteEntries
@@ -146,7 +146,7 @@ export default function ChildCard({ child, colorIndex }: ChildCardProps) {
           {/* À améliorer */}
           <div>
             <p className="text-sm font-semibold text-orange-600 flex items-center gap-1 mb-2">
-              ⚠️ À améliorer
+              ⚠️ Needs improvement
             </p>
             <div className="flex flex-col gap-1.5">
               {noteEntries

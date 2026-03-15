@@ -76,66 +76,66 @@ const PERSONNES: PersonneRessource[] = [
   {
     id: "PR-001",
     prenom: "Fatma", nom: "Demir",
-    role: "Parent-relais (Buddy)",
-    langues: ["Turc", "Allemand courant"],
+    role: "Parent Liaison (Buddy)",
+    langues: ["Turkish", "Fluent German"],
     ecole_rattachee: "Friedrich-Schiller-Gymnasium",
-    sujets_expertise: ["Gymnasium", "orientation", "communication avec l'école"],
+    sujets_expertise: ["Gymnasium", "orientation", "communication with school"],
     accepte_contact_plateforme: true,
-    disponibilite: "Flexible, préfère les soirs en semaine",
-    description: "Parent expérimentée en Allemagne depuis 8 ans. Connaît très bien le système scolaire.",
+    disponibilite: "Flexible, prefers weekday evenings",
+    description: "Experienced parent in Germany for 8 years. Very familiar with the school system.",
   },
   {
     id: "PR-002",
     prenom: "Olena", nom: "Kovalenko",
-    role: "Parent-relais (Buddy)",
-    langues: ["Ukrainien", "Russe", "Allemand intermédiaire"],
+    role: "Parent Liaison (Buddy)",
+    langues: ["Ukrainian", "Russian", "Intermediate German"],
     ecole_rattachee: "Grundschule Sontheim",
-    sujets_expertise: ["Grundschule", "intégration", "DaZ"],
+    sujets_expertise: ["Grundschule", "integration", "DaZ"],
     accepte_contact_plateforme: true,
-    disponibilite: "Soirs en semaine",
-    description: "Arrivée d'Ukraine il y a 2 ans. Expérience récente d'intégration scolaire.",
+    disponibilite: "Weekday evenings",
+    description: "Arrived from Ukraine 2 years ago. Recent experience with school integration.",
   },
   {
     id: "PR-003",
     prenom: "Ahmad", nom: "Hassan",
-    role: "Parent-relais (Buddy)",
-    langues: ["Arabe", "Allemand"],
-    sujets_expertise: ["Realschule", "aides financières", "BuT"],
+    role: "Parent Liaison (Buddy)",
+    langues: ["Arabic", "German"],
+    sujets_expertise: ["Realschule", "financial support", "BuT"],
     accepte_contact_plateforme: true,
-    disponibilite: "Mercredi et week-ends",
-    description: "Expert en aides financières (BuT). Parent d'un élève en Realschule.",
+    disponibilite: "Wednesdays and weekends",
+    description: "Expert in financial support (BuT). Parent of a student at Realschule.",
   },
   {
     id: "PR-004",
     prenom: "Ingrid", nom: "Weber",
-    role: "Secrétariat",
+    role: "Administration",
     ecole_rattachee: "Friedrich-Schiller-Gymnasium",
-    langues: ["Allemand"],
-    sujets_expertise: ["inscription", "documents", "administratif"],
+    langues: ["German"],
+    sujets_expertise: ["enrollment", "documents", "administrative"],
     accepte_contact_plateforme: true,
-    disponibilite: "Lun-Ven 8h-12h et 14h-16h",
-    description: "Secrétaire du FSG Heilbronn.",
+    disponibilite: "Mon–Fri 8am–12pm and 2pm–4pm",
+    description: "School secretary at FSG Heilbronn.",
   },
   {
     id: "PR-005",
     prenom: "Thomas", nom: "Müller",
-    role: "Conseiller d'orientation",
+    role: "Guidance Counsellor",
     ecole_rattachee: "Friedrich-Schiller-Gymnasium",
-    langues: ["Allemand", "Anglais"],
-    sujets_expertise: ["orientation scolaire", "Gymnasium", "Abitur"],
+    langues: ["German", "English"],
+    sujets_expertise: ["school guidance", "Gymnasium", "Abitur"],
     accepte_contact_plateforme: true,
-    disponibilite: "Sur rendez-vous",
-    description: "Conseiller d'orientation au Friedrich-Schiller-Gymnasium.",
+    disponibilite: "By appointment",
+    description: "Guidance Counsellor at Friedrich-Schiller-Gymnasium.",
   },
   {
     id: "PR-007",
     prenom: "Elif", nom: "Arslan",
-    role: "Médiatrice interculturelle",
-    langues: ["Turc", "Allemand", "Anglais"],
-    sujets_expertise: ["médiation", "droits des parents", "intégration"],
+    role: "Cultural Mediator",
+    langues: ["Turkish", "German", "English"],
+    sujets_expertise: ["mediation", "parental rights", "integration"],
     accepte_contact_plateforme: true,
-    disponibilite: "Lundi, Mercredi, Vendredi",
-    description: "Médiatrice interculturelle au Schulamt Heilbronn.",
+    disponibilite: "Monday, Wednesday, Friday",
+    description: "Cultural Mediator at Schulamt Heilbronn.",
   },
 ];
 
@@ -158,7 +158,7 @@ export default function DashboardContent() {
 
   useEffect(() => {
     if (!parentId) {
-      setError("Aucun identifiant parent fourni.");
+      setError("No parent ID provided.");
       setLoading(false);
       return;
     }
@@ -176,7 +176,7 @@ export default function DashboardContent() {
         const cd = contactsData as { contacts?: ContactItem[] };
         setContacts(cd.contacts ?? []);
       })
-      .catch(() => setError("Erreur lors du chargement des données."))
+      .catch(() => setError("Error loading data."))
       .finally(() => setLoading(false));
   }, [parentId]);
 
@@ -211,7 +211,7 @@ export default function DashboardContent() {
               className="w-10 h-10 rounded-full border-2 border-primary-lighter"
               style={{ borderTopColor: "var(--color-primary)", animation: "spin 0.8s linear infinite" }}
             />
-            <p className="text-muted text-sm">Chargement du dashboard…</p>
+            <p className="text-muted text-sm">Loading dashboard…</p>
           </div>
         </div>
       </div>
@@ -224,8 +224,8 @@ export default function DashboardContent() {
         <NavBar parentId={parentId} activePage="dashboard" />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-danger mb-4">{error ?? "Parent introuvable"}</p>
-            <Link href="/" className="text-primary underline text-sm">← Retour à l&apos;accueil</Link>
+            <p className="text-danger mb-4">{error ?? "Parent not found"}</p>
+            <Link href="/" className="text-primary underline text-sm">← Back to home</Link>
           </div>
         </div>
       </div>
@@ -233,7 +233,7 @@ export default function DashboardContent() {
   }
 
   const now = new Date();
-  const monthLabel = now.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+  const monthLabel = now.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
   const allEvents = agenda?.evenements ?? [];
 
   // Contacts: merge personne ressources (prioritize those who've been contacted)
@@ -267,7 +267,7 @@ export default function DashboardContent() {
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="font-display font-bold text-xl text-foreground">
-              Bonjour, {parent.prenom} 👋
+              Hello, {parent.prenom} 👋
             </h1>
             <p className="text-sm text-muted mt-0.5">
               {parent.ville}{parent.quartier ? `, ${parent.quartier}` : ""} · {parent.langue_maternelle}
@@ -280,10 +280,10 @@ export default function DashboardContent() {
       <div className="max-w-6xl mx-auto px-4 py-6">
 
         {/* ── A. MES ENFANTS ─────────────────────────────────────────────────── */}
-        <SectionTitle>Mes enfants</SectionTitle>
+        <SectionTitle>My children</SectionTitle>
 
         {children.length === 0 ? (
-          <p className="text-muted text-sm">Aucun enfant enregistré.</p>
+          <p className="text-muted text-sm">No children registered.</p>
         ) : (
           /* Mobile: horizontal carousel; desktop: 2-col grid */
           <div
@@ -316,7 +316,7 @@ export default function DashboardContent() {
             }`}
             style={agendaView === "calendar" ? { background: "var(--color-primary)" } : {}}
           >
-            📅 Calendrier
+            📅 Calendar
           </button>
           <button
             onClick={() => setAgendaView("list")}
@@ -327,7 +327,7 @@ export default function DashboardContent() {
             }`}
             style={agendaView === "list" ? { background: "var(--color-primary)" } : {}}
           >
-            📋 Liste
+            📋 List
           </button>
         </div>
 
@@ -345,12 +345,12 @@ export default function DashboardContent() {
                 className="bg-white rounded-2xl border border-line p-4 flex flex-col gap-3"
                 style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}
               >
-                <h3 className="font-display font-semibold text-sm text-foreground">Prochainement</h3>
+                <h3 className="font-display font-semibold text-sm text-foreground">Upcoming</h3>
                 {agenda?.prochains && agenda.prochains.length > 0 ? (
                   <div className="flex flex-col gap-2">
                     {agenda.prochains.slice(0, 6).map((item) => {
                       const d = new Date(item.date + "T00:00:00");
-                      const dateLabel = d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+                      const dateLabel = d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
                       return (
                         <div key={item.id} className="flex items-start gap-2 py-2 border-b border-line last:border-0">
                           <div
@@ -371,14 +371,14 @@ export default function DashboardContent() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-xs text-muted">Aucun événement dans les 14 prochains jours.</p>
+                  <p className="text-xs text-muted">No events in the next 14 days.</p>
                 )}
                 {agenda?.en_retard && agenda.en_retard.length > 0 && (
                   <div className="mt-1 p-2 bg-red-50 border border-red-200 rounded-xl">
                     <p className="text-xs font-semibold text-red-700">
-                      ⚠️ {agenda.en_retard.length} tâche{agenda.en_retard.length > 1 ? "s" : ""} en retard
+                      ⚠️ {agenda.en_retard.length} overdue task{agenda.en_retard.length > 1 ? "s" : ""}
                     </p>
-                    <p className="text-xs text-red-600 mt-0.5">Passez en vue Liste pour gérer.</p>
+                    <p className="text-xs text-red-600 mt-0.5">Switch to List view to manage.</p>
                   </div>
                 )}
               </div>
@@ -389,19 +389,19 @@ export default function DashboardContent() {
         )}
 
         {/* ── C. MES CONTACTS ────────────────────────────────────────────────── */}
-        <SectionTitle>Mes contacts</SectionTitle>
+        <SectionTitle>My contacts</SectionTitle>
 
         {personnesWithContext.length === 0 ? (
           <div className="bg-white rounded-2xl border border-line p-6 text-center" style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}>
             <p className="text-muted text-sm mb-3">
-              Vos contacts apparaîtront ici au fil de vos conversations avec SchoolBridge.
+              Your contacts will appear here as you have conversations with SchoolBridge.
             </p>
             <Link
               href={parentId ? `/community?parentId=${parentId}` : "/community"}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-white px-4 py-2 rounded-xl transition-colors"
               style={{ background: "var(--color-primary)" }}
             >
-              👥 Voir la communauté
+              👥 View community
             </Link>
           </div>
         ) : (
@@ -410,7 +410,7 @@ export default function DashboardContent() {
             {contactedIds.size > 0 && (
               <div className="mb-3">
                 <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
-                  Mes contacts ({contactedIds.size})
+                  My contacts ({contactedIds.size})
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {personnesWithContext
@@ -429,7 +429,7 @@ export default function DashboardContent() {
             )}
 
             <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
-              Personnes disponibles
+              Available people
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {personnesWithContext
@@ -447,7 +447,7 @@ export default function DashboardContent() {
         )}
 
         {/* ── D. MON PROFIL ──────────────────────────────────────────────────── */}
-        <SectionTitle>Mon profil</SectionTitle>
+        <SectionTitle>My profile</SectionTitle>
 
         <div
           className="rounded-2xl border border-line p-5 flex flex-col gap-2.5"
@@ -464,18 +464,18 @@ export default function DashboardContent() {
               {parent.ville}{parent.quartier ? `, ${parent.quartier}` : ""}
             </ProfileRow>
             <ProfileRow icon="🇩🇪">
-              En Allemagne depuis {parent.en_allemagne_depuis}
+              In Germany since {parent.en_allemagne_depuis}
             </ProfileRow>
             <ProfileRow icon="📖">
-              Niveau d&apos;allemand : {parent.niveau_allemand}
+              German level: {parent.niveau_allemand}
             </ProfileRow>
             {parent.premier_enfant_en_allemagne && (
               <ProfileRow icon="👶">
-                Premier enfant scolarisé en Allemagne
+                First child enrolled in school in Germany
               </ProfileRow>
             )}
             <ProfileRow icon="🧭">
-              Compréhension du système : {parent.comprehension_systeme_scolaire}
+              System understanding: {parent.comprehension_systeme_scolaire}
             </ProfileRow>
             <ProfileRow icon="✉️">{parent.email}</ProfileRow>
             <ProfileRow icon="📞">{parent.telephone}</ProfileRow>

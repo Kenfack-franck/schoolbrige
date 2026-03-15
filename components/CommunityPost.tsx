@@ -56,9 +56,9 @@ function getAvatarColor(role: string): string {
 
 function getTypeLabel(type: CommunityPostData["type"]): string {
   const labels: Record<CommunityPostData["type"], string> = {
-    annonce_officielle: "Annonce",
+    annonce_officielle: "Announcement",
     information: "Info",
-    evenement: "Événement",
+    evenement: "Event",
     question: "Question",
   };
   return labels[type];
@@ -79,10 +79,10 @@ function formatDate(dateStr: string): string {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   const diff = Math.round((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-  if (diff === 0) return "Aujourd'hui";
-  if (diff === -1) return "Hier";
-  if (diff > -7 && diff < 0) return `Il y a ${Math.abs(diff)} j`;
-  return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  if (diff === 0) return "Today";
+  if (diff === -1) return "Yesterday";
+  if (diff > -7 && diff < 0) return `${Math.abs(diff)} days ago`;
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -138,7 +138,7 @@ export default function CommunityPost({ post, parentId, onAgendaAdd }: Community
             date: post.date,
             heure: null,
             type: "evenement",
-            source: "Communauté",
+            source: "Community",
             description: post.contenu.slice(0, 200),
             enfant_concerne: null,
             lieu: null,
@@ -277,7 +277,7 @@ export default function CommunityPost({ post, parentId, onAgendaAdd }: Community
           <div className="text-base text-foreground leading-relaxed">
             <p className="whitespace-pre-wrap">{displayContent}</p>
             {translatedContent && (
-              <p className="text-sm text-muted mt-1 italic">Traduit depuis {post.langue_originale}</p>
+              <p className="text-sm text-muted mt-1 italic">Translated from {post.langue_originale}</p>
             )}
           </div>
 
@@ -300,7 +300,7 @@ export default function CommunityPost({ post, parentId, onAgendaAdd }: Community
                 disabled={translating}
                 className="text-sm bg-canvas-muted text-foreground hover:bg-line px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
               >
-                {translating ? "Traduction..." : "🌐 Traduire"}
+                {translating ? "Translating..." : "🌐 Translate"}
               </button>
             )}
             {isEvent && parentId && (
@@ -313,7 +313,7 @@ export default function CommunityPost({ post, parentId, onAgendaAdd }: Community
                     : "bg-green-50 text-green-700 hover:bg-green-100"
                 }`}
               >
-                {agendaAdded ? "✅ Ajouté" : "📅 À l'agenda"}
+                {agendaAdded ? "✅ Added" : "📅 Add to agenda"}
               </button>
             )}
             {isAuteurContact && parentId && (
@@ -321,7 +321,7 @@ export default function CommunityPost({ post, parentId, onAgendaAdd }: Community
                 href={`/dashboard?parentId=${parentId}`}
                 className="text-sm bg-primary-lighter text-primary px-4 py-2 rounded-lg font-medium transition-colors hover:opacity-80"
               >
-                📨 Contacter
+                📨 Contact
               </a>
             )}
           </div>
@@ -350,7 +350,7 @@ export default function CommunityPost({ post, parentId, onAgendaAdd }: Community
                     type="text"
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Écrire un commentaire..."
+                    placeholder="Write a comment..."
                     className="flex-1 border border-line rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white"
                   />
                   <button
@@ -359,7 +359,7 @@ export default function CommunityPost({ post, parentId, onAgendaAdd }: Community
                     className="shrink-0 text-sm font-semibold px-4 py-2 rounded-xl text-white disabled:opacity-40 transition-colors"
                     style={{ background: "var(--color-primary)" }}
                   >
-                    {submittingComment ? "..." : "Envoyer"}
+                    {submittingComment ? "..." : "Send"}
                   </button>
                 </form>
               )}

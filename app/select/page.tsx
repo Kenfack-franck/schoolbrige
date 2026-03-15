@@ -29,7 +29,7 @@ export default function SelectPage() {
         setLoading(false);
       })
       .catch(() => {
-        setError("Impossible de charger la liste des parents.");
+        setError("Unable to load the list of parents.");
         setLoading(false);
       });
   }, []);
@@ -49,16 +49,16 @@ export default function SelectPage() {
           🎓 SchoolBridge
         </Link>
         <Link href="/" className="ml-auto text-sm text-muted hover:text-foreground transition-colors">
-          ← Accueil
+          ← Home
         </Link>
       </header>
 
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <h2 className="font-display font-bold text-2xl text-foreground mb-2">Qui êtes-vous ?</h2>
-        <p className="text-muted mb-6">Cliquez sur votre nom pour accéder à votre espace.</p>
+        <h2 className="font-display font-bold text-2xl text-foreground mb-2">Who are you?</h2>
+        <p className="text-muted mb-6">Click on your name to access your space.</p>
 
         {loading && (
-          <div className="text-center text-muted py-12">Chargement...</div>
+          <div className="text-center text-muted py-12">Loading...</div>
         )}
         {error && (
           <div className="text-danger bg-danger-light border border-danger rounded-xl p-4">{error}</div>
@@ -100,7 +100,7 @@ export default function SelectPage() {
                     style={{ background: "var(--color-primary)" }}
                   >
                     <span>💬</span>
-                    <span>Discuter</span>
+                    <span>Chat</span>
                   </button>
                   <button
                     onClick={() => router.push(`/dashboard?parentId=${p.id}`)}
@@ -114,7 +114,7 @@ export default function SelectPage() {
                     className="flex-1 flex items-center justify-center gap-2 bg-white border border-line text-foreground px-4 py-3 rounded-xl font-semibold text-sm hover:bg-canvas-soft transition-all duration-200"
                   >
                     <span>👥</span>
-                    <span>Communauté</span>
+                    <span>Community</span>
                   </button>
                 </div>
               )}

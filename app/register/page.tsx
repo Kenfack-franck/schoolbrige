@@ -7,25 +7,25 @@ import Link from "next/link";
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const LANGUES = [
-  "Turc", "Arabe", "Ukrainien", "Russe", "Polonais", "Roumain",
-  "Anglais", "Français", "Espagnol", "Italien", "Portugais",
-  "Farsi", "Dari", "Tigrinya", "Japonais", "Autre",
+  "Turkish", "Arabic", "Ukrainian", "Russian", "Polish", "Romanian",
+  "English", "French", "Spanish", "Italian", "Portuguese",
+  "Farsi", "Dari", "Tigrinya", "Japanese", "Other",
 ];
 
 const DUREES = [
-  "Moins de 6 mois", "6 mois à 2 ans", "2 à 5 ans", "Plus de 5 ans",
+  "Less than 6 months", "6 months to 2 years", "2 to 5 years", "More than 5 years",
 ];
 
-const NIVEAUX_ALLEMAND = ["Aucun", "Basique", "Intermédiaire", "Courant"];
+const NIVEAUX_ALLEMAND = ["None", "Basic", "Intermediate", "Fluent"];
 
 const TYPES_ECOLE = [
   "Grundschule", "Gymnasium", "Realschule",
-  "Werkrealschule", "Gemeinschaftsschule", "Je ne sais pas",
+  "Werkrealschule", "Gemeinschaftsschule", "I don't know",
 ];
 
 const CLASSES = Array.from({ length: 13 }, (_, i) => `Klasse ${i + 1}`);
 
-const RESULTATS = ["Très bons", "Bons", "Moyens", "En difficulté", "Je ne sais pas"];
+const RESULTATS = ["Excellent", "Good", "Average", "Struggling", "I don't know"];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -118,24 +118,24 @@ export default function RegisterPage() {
   function validate(): boolean {
     const newErrors: Errors = {};
 
-    if (!form.prenom.trim()) newErrors.prenom = "Le prénom est obligatoire.";
-    if (!form.nom.trim()) newErrors.nom = "Le nom est obligatoire.";
-    if (!form.langue_maternelle) newErrors.langue_maternelle = "Choisissez une langue.";
-    if (!form.pays_origine.trim()) newErrors.pays_origine = "Le pays d'origine est obligatoire.";
-    if (!form.ville.trim()) newErrors.ville = "La ville est obligatoire.";
-    if (!form.en_allemagne_depuis) newErrors.en_allemagne_depuis = "Choisissez une durée.";
-    if (!form.niveau_allemand) newErrors.niveau_allemand = "Choisissez un niveau.";
-    if (!form.premier_enfant_en_allemagne) newErrors.premier_enfant_en_allemagne = "Ce champ est obligatoire.";
+    if (!form.prenom.trim()) newErrors.prenom = "First name is required.";
+    if (!form.nom.trim()) newErrors.nom = "Last name is required.";
+    if (!form.langue_maternelle) newErrors.langue_maternelle = "Please select a language.";
+    if (!form.pays_origine.trim()) newErrors.pays_origine = "Country of origin is required.";
+    if (!form.ville.trim()) newErrors.ville = "City is required.";
+    if (!form.en_allemagne_depuis) newErrors.en_allemagne_depuis = "Please select a duration.";
+    if (!form.niveau_allemand) newErrors.niveau_allemand = "Please select a level.";
+    if (!form.premier_enfant_en_allemagne) newErrors.premier_enfant_en_allemagne = "This field is required.";
 
     form.enfants.forEach((e, i) => {
-      if (!e.prenom.trim()) newErrors[`enfant_${i}_prenom`] = "Prénom obligatoire.";
-      if (!e.nom.trim()) newErrors[`enfant_${i}_nom`] = "Nom obligatoire.";
+      if (!e.prenom.trim()) newErrors[`enfant_${i}_prenom`] = "First name is required.";
+      if (!e.nom.trim()) newErrors[`enfant_${i}_nom`] = "Last name is required.";
       const age = parseInt(e.age);
       if (!e.age || isNaN(age) || age < 5 || age > 20)
-        newErrors[`enfant_${i}_age`] = "Âge entre 5 et 20 ans.";
-      if (!e.type_ecole) newErrors[`enfant_${i}_type_ecole`] = "Type d'école obligatoire.";
-      if (!e.classe) newErrors[`enfant_${i}_classe`] = "Classe obligatoire.";
-      if (!e.resultats_scolaires) newErrors[`enfant_${i}_resultats_scolaires`] = "Résultats obligatoires.";
+        newErrors[`enfant_${i}_age`] = "Age must be between 5 and 20.";
+      if (!e.type_ecole) newErrors[`enfant_${i}_type_ecole`] = "School type is required.";
+      if (!e.classe) newErrors[`enfant_${i}_classe`] = "Class is required.";
+      if (!e.resultats_scolaires) newErrors[`enfant_${i}_resultats_scolaires`] = "Academic results are required.";
     });
 
     setErrors(newErrors);
@@ -156,7 +156,7 @@ export default function RegisterPage() {
         ville: form.ville,
         en_allemagne_depuis: form.en_allemagne_depuis,
         niveau_allemand: form.niveau_allemand,
-        premier_enfant_en_allemagne: form.premier_enfant_en_allemagne === "Oui",
+        premier_enfant_en_allemagne: form.premier_enfant_en_allemagne === "Yes",
         enfants: form.enfants.map((e) => ({
           prenom: e.prenom,
           nom: e.nom,
@@ -176,13 +176,13 @@ export default function RegisterPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        setErrors({ _global: data.error ?? "Erreur lors de l'inscription." });
+        setErrors({ _global: data.error ?? "Registration error." });
         return;
       }
 
       router.push(`/chat?parentId=${data.parentId}`);
     } catch {
-      setErrors({ _global: "Erreur réseau. Veuillez réessayer." });
+      setErrors({ _global: "Network error. Please try again." });
     } finally {
       setSubmitting(false);
     }
@@ -209,7 +209,7 @@ export default function RegisterPage() {
             href="/chat?parentId=PAR-001"
             className="text-sm text-muted hover:text-foreground transition-colors hidden sm:block"
           >
-            Voir la démo
+            View demo
           </Link>
         </div>
       </header>
@@ -219,10 +219,10 @@ export default function RegisterPage() {
         {/* Page title */}
         <div className="mb-8">
           <h1 className="font-display font-bold text-3xl text-foreground mb-2">
-            Créez votre profil
+            Create your profile
           </h1>
           <p className="text-muted">
-            SchoolBridge personnalise chaque réponse selon votre situation familiale et votre langue.
+            SchoolBridge personalises every response according to your family situation and language.
           </p>
         </div>
 
@@ -235,122 +235,122 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
 
           {/* ── Section Parent ── */}
-          <Card icon="👤" title="Votre profil">
+          <Card icon="👤" title="Your profile">
 
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Prénom *" error={errors.prenom}>
+              <Field label="First name *" error={errors.prenom}>
                 <input className={inputClass("prenom")} value={form.prenom}
-                  onChange={(e) => setParent("prenom", e.target.value)} placeholder="Ex : Amina" />
+                  onChange={(e) => setParent("prenom", e.target.value)} placeholder="e.g. Amina" />
               </Field>
-              <Field label="Nom *" error={errors.nom}>
+              <Field label="Last name *" error={errors.nom}>
                 <input className={inputClass("nom")} value={form.nom}
-                  onChange={(e) => setParent("nom", e.target.value)} placeholder="Ex : Yilmaz" />
+                  onChange={(e) => setParent("nom", e.target.value)} placeholder="e.g. Yilmaz" />
               </Field>
             </div>
 
-            <Field label="Langue maternelle *" error={errors.langue_maternelle}>
+            <Field label="Native language *" error={errors.langue_maternelle}>
               <select className={inputClass("langue_maternelle")} value={form.langue_maternelle}
                 onChange={(e) => setParent("langue_maternelle", e.target.value)}>
-                <option value="">— Sélectionnez votre langue —</option>
+                <option value="">— Select your language —</option>
                 {LANGUES.map((l) => <option key={l}>{l}</option>)}
               </select>
             </Field>
 
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Pays d'origine *" error={errors.pays_origine}>
+              <Field label="Country of origin *" error={errors.pays_origine}>
                 <input className={inputClass("pays_origine")} value={form.pays_origine}
-                  onChange={(e) => setParent("pays_origine", e.target.value)} placeholder="Ex : Turquie" />
+                  onChange={(e) => setParent("pays_origine", e.target.value)} placeholder="e.g. Turkey" />
               </Field>
-              <Field label="Ville de résidence *" error={errors.ville}>
+              <Field label="City of residence *" error={errors.ville}>
                 <input className={inputClass("ville")} value={form.ville}
                   onChange={(e) => setParent("ville", e.target.value)} />
               </Field>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Field label="En Allemagne depuis *" error={errors.en_allemagne_depuis}>
+              <Field label="In Germany since *" error={errors.en_allemagne_depuis}>
                 <select className={inputClass("en_allemagne_depuis")} value={form.en_allemagne_depuis}
                   onChange={(e) => setParent("en_allemagne_depuis", e.target.value)}>
-                  <option value="">— Sélectionnez —</option>
+                  <option value="">— Select —</option>
                   {DUREES.map((d) => <option key={d}>{d}</option>)}
                 </select>
               </Field>
-              <Field label="Niveau d'allemand *" error={errors.niveau_allemand}>
+              <Field label="German level *" error={errors.niveau_allemand}>
                 <select className={inputClass("niveau_allemand")} value={form.niveau_allemand}
                   onChange={(e) => setParent("niveau_allemand", e.target.value)}>
-                  <option value="">— Sélectionnez —</option>
+                  <option value="">— Select —</option>
                   {NIVEAUX_ALLEMAND.map((n) => <option key={n}>{n}</option>)}
                 </select>
               </Field>
             </div>
 
-            <Field label="Premier enfant scolarisé en Allemagne ? *" error={errors.premier_enfant_en_allemagne}>
+            <Field label="First child enrolled in school in Germany? *" error={errors.premier_enfant_en_allemagne}>
               <select className={inputClass("premier_enfant_en_allemagne")} value={form.premier_enfant_en_allemagne}
                 onChange={(e) => setParent("premier_enfant_en_allemagne", e.target.value)}>
-                <option value="">— Sélectionnez —</option>
-                <option>Oui</option>
-                <option>Non</option>
+                <option value="">— Select —</option>
+                <option>Yes</option>
+                <option>No</option>
               </select>
             </Field>
           </Card>
 
           {/* ── Section Enfants ── */}
-          <Card icon="🎒" title="Votre/vos enfant(s)">
+          <Card icon="🎒" title="Your child(ren)">
 
             {form.enfants.map((enfant, i) => (
               <div key={i} className={`flex flex-col gap-4 ${i > 0 ? "pt-5 border-t border-line" : ""}`}>
                 {form.enfants.length > 1 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-foreground">Enfant {i + 1}</span>
+                    <span className="text-sm font-semibold text-foreground">Child {i + 1}</span>
                     <button type="button" onClick={() => removeEnfant(i)}
                       className="text-xs text-danger/70 hover:text-danger font-medium transition-colors">
-                      Supprimer
+                      Remove
                     </button>
                   </div>
                 )}
 
                 <div className="grid grid-cols-2 gap-4">
-                  <Field label="Prénom *" error={errors[`enfant_${i}_prenom`]}>
+                  <Field label="First name *" error={errors[`enfant_${i}_prenom`]}>
                     <input className={inputClass(`enfant_${i}_prenom`)} value={enfant.prenom}
-                      onChange={(e) => setEnfant(i, "prenom", e.target.value)} placeholder="Prénom" />
+                      onChange={(e) => setEnfant(i, "prenom", e.target.value)} placeholder="First name" />
                   </Field>
-                  <Field label="Nom *" error={errors[`enfant_${i}_nom`]}>
+                  <Field label="Last name *" error={errors[`enfant_${i}_nom`]}>
                     <input className={inputClass(`enfant_${i}_nom`)} value={enfant.nom}
-                      onChange={(e) => setEnfant(i, "nom", e.target.value)} placeholder="Nom" />
+                      onChange={(e) => setEnfant(i, "nom", e.target.value)} placeholder="Last name" />
                   </Field>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
-                  <Field label="Âge *" error={errors[`enfant_${i}_age`]}>
+                  <Field label="Age *" error={errors[`enfant_${i}_age`]}>
                     <input type="number" min={5} max={20} className={inputClass(`enfant_${i}_age`)}
                       value={enfant.age} onChange={(e) => setEnfant(i, "age", e.target.value)} placeholder="12" />
                   </Field>
-                  <Field label="Type d'école *" error={errors[`enfant_${i}_type_ecole`]}>
+                  <Field label="School type *" error={errors[`enfant_${i}_type_ecole`]}>
                     <select className={inputClass(`enfant_${i}_type_ecole`)} value={enfant.type_ecole}
                       onChange={(e) => setEnfant(i, "type_ecole", e.target.value)}>
-                      <option value="">— Sélectionnez —</option>
+                      <option value="">— Select —</option>
                       {TYPES_ECOLE.map((t) => <option key={t}>{t}</option>)}
                     </select>
                   </Field>
-                  <Field label="Classe *" error={errors[`enfant_${i}_classe`]}>
+                  <Field label="Class *" error={errors[`enfant_${i}_classe`]}>
                     <select className={inputClass(`enfant_${i}_classe`)} value={enfant.classe}
                       onChange={(e) => setEnfant(i, "classe", e.target.value)}>
-                      <option value="">— Sél. —</option>
+                      <option value="">— Sel. —</option>
                       {CLASSES.map((c) => <option key={c}>{c}</option>)}
                     </select>
                   </Field>
                 </div>
 
-                <Field label="Nom de l'école (optionnel)" error={undefined}>
+                <Field label="School name (optional)" error={undefined}>
                   <input className={inputClass(`enfant_${i}_nom_ecole`)} value={enfant.nom_ecole}
                     onChange={(e) => setEnfant(i, "nom_ecole", e.target.value)}
-                    placeholder="Ex : Friedrich-Schiller-Gymnasium" />
+                    placeholder="e.g. Friedrich-Schiller-Gymnasium" />
                 </Field>
 
-                <Field label="Résultats scolaires *" error={errors[`enfant_${i}_resultats_scolaires`]}>
+                <Field label="Academic results *" error={errors[`enfant_${i}_resultats_scolaires`]}>
                   <select className={inputClass(`enfant_${i}_resultats_scolaires`)} value={enfant.resultats_scolaires}
                     onChange={(e) => setEnfant(i, "resultats_scolaires", e.target.value)}>
-                    <option value="">— Sélectionnez —</option>
+                    <option value="">— Select —</option>
                     {RESULTATS.map((r) => <option key={r}>{r}</option>)}
                   </select>
                 </Field>
@@ -361,7 +361,7 @@ export default function RegisterPage() {
               <button type="button" onClick={addEnfant}
                 className="self-start text-sm font-medium text-primary hover:text-primary-light transition-colors flex items-center gap-1.5 mt-1">
                 <span className="text-base leading-none">+</span>
-                Ajouter un autre enfant
+                Add another child
               </button>
             )}
           </Card>
@@ -381,17 +381,17 @@ export default function RegisterPage() {
             {submitting ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                Création du profil...
+                Creating profile...
               </span>
             ) : (
-              "Créer mon profil et démarrer →"
+              "Create my profile and get started →"
             )}
           </button>
 
           <p className="text-center text-xs text-muted">
-            Déjà un profil ?{" "}
+            Already have a profile?{" "}
             <Link href="/chat?parentId=PAR-001" className="text-primary hover:underline">
-              Voir la démo
+              View demo
             </Link>
           </p>
         </form>

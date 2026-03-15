@@ -42,7 +42,7 @@ export default function ContactModal({
           personneRessourceId: personneId,
           nom,
           role,
-          contexte: "Prise de contact via l'assistant",
+          contexte: "Initial contact via the assistant",
         }),
       });
       const contactData = (await contactRes.json()) as {
@@ -62,7 +62,7 @@ export default function ContactModal({
         setTimeout(() => onSuccess(), 1800);
       }
     } catch {
-      setError("Erreur lors de l'envoi. Veuillez réessayer.");
+      setError("Error sending message. Please try again.");
     } finally {
       setSending(false);
     }
@@ -93,14 +93,14 @@ export default function ContactModal({
 
         {sent ? (
           <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-green-700 text-sm">
-            ✅ Message envoyé avec succès !
+            ✅ Message sent successfully!
           </div>
         ) : (
           <>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder={`Écrivez votre message à ${nom}...`}
+              placeholder={`Write your message to ${nom}...`}
               rows={4}
               className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
@@ -110,14 +110,14 @@ export default function ContactModal({
                 onClick={onClose}
                 className="flex-1 py-2 rounded-xl border border-slate-300 text-slate-600 text-sm hover:bg-slate-50"
               >
-                Annuler
+                Cancel
               </button>
               <button
                 onClick={handleSend}
                 disabled={sending || !message.trim()}
                 className="flex-1 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-50"
               >
-                {sending ? "Envoi..." : "Envoyer"}
+                {sending ? "Sending..." : "Send"}
               </button>
             </div>
           </>
