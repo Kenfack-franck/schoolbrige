@@ -8,6 +8,37 @@ import fs from "fs";
 import path from "path";
 import type { Parent, Child } from "./data";
 
+// ─── Community ────────────────────────────────────────────────────────────────
+
+export interface Comment {
+  id: string;
+  auteur_id: string | null;
+  auteur_nom: string;
+  auteur_role?: string;
+  contenu: string;
+  date: string;
+}
+
+export interface CommunityPost {
+  id: string;
+  auteur_id: string | null;
+  auteur_nom: string;
+  auteur_role: "Direction" | "Secrétariat" | "Enseignante" | "Enseignant" | "Conseiller d'orientation" | "Médiatrice interculturelle" | "Parent-relais" | "Parent" | "Bot" | "Institution";
+  auteur_ecole: string | null;
+  type: "annonce_officielle" | "information" | "question" | "evenement";
+  ecole_cible: string | null;
+  date: string;
+  titre: string;
+  contenu: string;
+  langue_originale: string;
+  epingle: boolean;
+  tags: string[];
+  image: string | null;
+  likes: number;
+  liked_by: string[];
+  comments: Comment[];
+}
+
 const DATA_DIR = path.join(process.cwd(), "schoolbridge-data");
 
 function readJsonFile<T>(relativePath: string): T {
@@ -19,6 +50,7 @@ function readJsonFile<T>(relativePath: string): T {
 
 let _parents: Parent[] | null = null;
 let _children: Child[] | null = null;
+let _communityPosts: CommunityPost[] = readJsonFile<CommunityPost[]>("community/posts.json");
 
 function ensureLoaded() {
   if (!_parents) {
@@ -27,6 +59,84 @@ function ensureLoaded() {
   if (!_children) {
     _children = readJsonFile<Child[]>("enfants/enfants.json");
   }
+}
+
+// ─── Community helpers ────────────────────────────────────────────────────────
+
+function getParentSchoolIds(parentId: string): string[] {
+  ensureLoaded();
+  const children = _children!.filter(c => c.parent_id === parentId);
+  return [...new Set(children.map(c => c.ecole_id).filter(Boolean))];
+}
+
+export function getCommunityPosts(parentId: string, filter: "ecole" | "general"): CommunityPost[] {
+  const schoolIds = getParentSchoolIds(parentId);
+  let posts: CommunityPost[];
+  if (filter === "ecole") {
+    posts = _communityPosts.filter(p => p.ecole_cible !== null && schoolIds.includes(p.ecole_cible));
+  } else {
+    // General: ONLY posts with no school target (ecole_cible === null)
+    posts = _communityPosts.filter(p => p.ecole_cible === null);
+  }
+  return posts.sort((a, b) => {
+    if (a.epingle !== b.epingle) return a.epingle ? -1 : 1;
+    return b.date.localeCompare(a.date);
+  });
+}
+
+export function getUrgentPosts(parentId: string): CommunityPost[] {
+  const schoolIds = getParentSchoolIds(parentId);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  const cutoff = sevenDaysAgo.toISOString().slice(0, 10);
+
+  return _communityPosts.filter(p => {
+    if (p.ecole_cible === null || !schoolIds.includes(p.ecole_cible)) return false;
+    return p.epingle || (p.type === "annonce_officielle" && p.date >= cutoff);
+  }).sort((a, b) => {
+    if (a.epingle !== b.epingle) return a.epingle ? -1 : 1;
+    return b.date.localeCompare(a.date);
+  });
+}
+
+export function addCommunityPost(post: Omit<CommunityPost, "id">): CommunityPost {
+  const newPost: CommunityPost = { ...post, id: `POST-NEW-${Date.now()}` };
+  _communityPosts.unshift(newPost);
+  return newPost;
+}
+
+export function toggleLike(postId: string, parentId: string): { likes: number; liked: boolean } | null {
+  const post = _communityPosts.find(p => p.id === postId);
+  if (!post) return null;
+  const alreadyLiked = post.liked_by.includes(parentId);
+  if (alreadyLiked) {
+    post.liked_by = post.liked_by.filter(id => id !== parentId);
+    post.likes = Math.max(0, post.likes - 1);
+  } else {
+    post.liked_by.push(parentId);
+    post.likes += 1;
+  }
+  return { likes: post.likes, liked: !alreadyLiked };
+}
+
+export function addComment(postId: string, comment: Omit<Comment, "id">): Comment | null {
+  const post = _communityPosts.find(p => p.id === postId);
+  if (!post) return null;
+  const newComment: Comment = { ...comment, id: `CMT-${Date.now()}` };
+  post.comments.push(newComment);
+  return newComment;
+}
+
+export function getRecentPostsForContext(parentId: string, limit: number): CommunityPost[] {
+  const schoolIds = getParentSchoolIds(parentId);
+  return _communityPosts
+    .filter(p => p.ecole_cible === null || schoolIds.includes(p.ecole_cible))
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, limit);
+}
+
+export function getCommunityPostById(postId: string): CommunityPost | undefined {
+  return _communityPosts.find(p => p.id === postId);
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
@@ -93,25 +203,54 @@ export interface ContactItem {
   messages: Array<{ date: string; texte: string }>;
 }
 
-const _agendas = new Map<string, AgendaItem[]>(); // key = parentId
 const _contacts = new Map<string, ContactItem[]>(); // key = parentId
 
+// ─── Agenda : file-based persistence ─────────────────────────────────────────
+// Each parent has its own JSON file: schoolbridge-data/agendas/{parentId}.json
+// This survives Next.js hot-module reloads in development.
+
+const AGENDAS_DIR = path.join(DATA_DIR, "agendas");
+
+function agendaFilePath(parentId: string): string {
+  // Sanitize parentId to avoid path traversal
+  const safe = parentId.replace(/[^a-zA-Z0-9_-]/g, "_");
+  return path.join(AGENDAS_DIR, `${safe}.json`);
+}
+
+function readAgendaFile(parentId: string): AgendaItem[] {
+  try {
+    const raw = fs.readFileSync(agendaFilePath(parentId), "utf-8");
+    return JSON.parse(raw) as AgendaItem[];
+  } catch {
+    return [];
+  }
+}
+
+function writeAgendaFile(parentId: string, items: AgendaItem[]): void {
+  try {
+    if (!fs.existsSync(AGENDAS_DIR)) fs.mkdirSync(AGENDAS_DIR, { recursive: true });
+    fs.writeFileSync(agendaFilePath(parentId), JSON.stringify(items, null, 2), "utf-8");
+  } catch (err) {
+    console.error("[store] Failed to write agenda file:", err);
+  }
+}
+
 export function getAgenda(parentId: string): AgendaItem[] {
-  return _agendas.get(parentId) ?? [];
+  return readAgendaFile(parentId);
 }
 
 export function setAgenda(parentId: string, items: AgendaItem[]): void {
-  _agendas.set(parentId, items);
+  writeAgendaFile(parentId, items);
 }
 
 export function addAgendaItems(parentId: string, items: AgendaItem[]): void {
-  const existing = _agendas.get(parentId) ?? [];
-  _agendas.set(parentId, [...existing, ...items]);
+  const existing = readAgendaFile(parentId);
+  writeAgendaFile(parentId, [...existing, ...items]);
 }
 
 export function markAgendaItemDone(parentId: string, itemId: string, fait: boolean): void {
-  const items = _agendas.get(parentId) ?? [];
-  _agendas.set(parentId, items.map(i => i.id === itemId ? { ...i, fait } : i));
+  const items = readAgendaFile(parentId);
+  writeAgendaFile(parentId, items.map(i => i.id === itemId ? { ...i, fait } : i));
 }
 
 export function getContacts(parentId: string): ContactItem[] {

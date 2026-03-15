@@ -13,17 +13,20 @@ Browser
   ├── GET /chat         → Interface de chat (SSE, TTS, STT, upload, sessions)
   └── GET /dashboard    → Dashboard parent (enfants, agenda, contacts, profil)
        │
-       ├── POST /api/chat          → ReadableStream (SSE)
-       ├── POST /api/upload        → ReadableStream (SSE, multipart)
-       ├── GET  /api/parents       → Liste parents
-       ├── GET  /api/parents/[id]  → Profil parent + enfants
-       ├── POST /api/register      → Inscription
+       ├── POST /api/chat                      → ReadableStream (SSE)
+       ├── POST /api/upload                    → ReadableStream (SSE, multipart)
+       ├── GET  /api/parents                   → Liste parents
+       ├── GET  /api/parents/[id]              → Profil parent + enfants
+       ├── POST /api/register                  → Inscription
        ├── GET|POST|PATCH /api/agenda/[parentId]
-       └── GET|POST       /api/contacts/[parentId]
+       ├── GET|POST       /api/contacts/[parentId]
+       ├── GET|POST       /api/community       → Posts communautaires
+       ├── POST           /api/community/translate → Traduction Gemini
+       └── GET            /api/community/urgent   → Posts urgents (épinglés + 7j)
             │
-            ├── lib/store.ts       ─── parents + enfants + agenda + contacts (mémoire)
+            ├── lib/store.ts       ─── parents + enfants + agenda + contacts + posts communauté (mémoire)
             ├── lib/data.ts        ─── accès données via store + fichiers JSON/Markdown
-            ├── lib/prompts.ts     ─── prompts contextuels (9 règles)
+            ├── lib/prompts.ts     ─── prompts contextuels (11 règles)
             └── lib/gemini.ts      ─── Gemini 2.5 Flash (chat + chatWithImage)
 ```
 

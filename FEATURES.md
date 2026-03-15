@@ -1,5 +1,40 @@
 # Features SchoolBridge
 
+## Version 6 — Communauté (Partie 2 : Frontend + Bannière)
+
+| Feature | Statut | Notes |
+|---|---|---|
+| Page `/community` (Suspense wrapper) | ✅ Fait | `app/community/page.tsx` |
+| Onglets « Mon école » / « Général » | ✅ Fait | Filtre passé à l'API |
+| Liste de posts avec `CommunityPost` | ✅ Fait | Composant réutilisable |
+| Avatar initiales + badge rôle coloré | ✅ Fait | Couleur selon rôle |
+| Indicateur 📌 Épinglé + bordure gauche ambre | ✅ Fait | |
+| Expand/collapse pour les longs contenus | ✅ Fait | Épinglés dépliés par défaut |
+| Bouton 🌐 Traduire (Gemini, noms propres préservés) | ✅ Fait | Appelle `/api/community/translate` |
+| Bouton 📅 Ajouter à l'agenda (événements) | ✅ Fait | POST `/api/agenda/[parentId]` |
+| Bouton 📨 Contacter (auteurs PR-xxx) | ✅ Fait | Lien vers dashboard |
+| Modal « Publier un message » | ✅ Fait | Type, titre, contenu |
+| Bannière urgente dans le chat | ✅ Fait | Ambre, max 3 posts, sessionStorage dismiss |
+| Page communauté accessible sans parentId | ✅ Fait | Affiche posts généraux uniquement |
+| Bouton 👥 Communauté dans le chat | ✅ Fait | Header (utilisateur identifié) |
+| Bouton 👥 Communauté dans le dashboard | ✅ Fait | Header |
+| 3e bouton « Communauté » sur `/select` | ✅ Fait | Carte expandable |
+| Lien Communauté sur la page d'accueil | ✅ Fait | Lien discret en bas |
+
+## Version 6 — Communauté (Partie 1 : Données + API)
+
+| Feature | Statut | Notes |
+|---|---|---|
+| Posts communautaires pré-remplis (12 posts) | ✅ Fait | Annonces, infos, events, questions — 5 langues |
+| API GET /api/community (filtre école / général) | ✅ Fait | Épinglés en premier, triés par date |
+| API POST /api/community (nouveau post) | ✅ Fait | Auteur = parent identifié |
+| API POST /api/community/translate | ✅ Fait | Traduction Gemini, noms propres préservés |
+| API GET /api/community/urgent | ✅ Fait | Épinglés + annonces officielles 7 jours, `contenu_court` |
+| Contexte communauté injecté dans Gemini | ✅ Fait | 10 posts récents des écoles du parent |
+| Agent cite les posts naturellement | ✅ Fait | "D'après une annonce de Frau Weber..." |
+| Agent propose de poster une question | ✅ Fait | `community_question` JSON → post créé + `event: community` SSE |
+| Notification 📢 dans le chat | ✅ Fait | Bannière violet pâle quand question postée |
+
 ## Version 5 — Dashboard + Agenda + Contacts + Sessions + STT
 
 | Feature | Statut | Notes |

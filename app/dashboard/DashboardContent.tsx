@@ -3,6 +3,11 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import NavBar from "@/components/NavBar";
+import ChildCard, { type Child } from "@/components/ChildCard";
+import CalendarView, { type AgendaItem, TYPE_DOT_COLOR } from "@/components/CalendarView";
+import AgendaListView from "@/components/AgendaListView";
+import ContactCard, { type PersonneRessource } from "@/components/ContactCard";
 import ContactModal from "@/components/ContactModal";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
@@ -20,37 +25,7 @@ interface Parent {
   niveau_allemand: string;
   comprehension_systeme_scolaire: string;
   en_allemagne_depuis: string;
-}
-
-interface Child {
-  id: string;
-  prenom: string;
-  nom: string;
-  age: number;
-  classe: string;
-  type_ecole: string;
-  nom_ecole: string;
-  ecole_id: string;
-  moyenne_generale: number | null;
-  matieres_fortes: string[];
-  matieres_faibles: string[];
-  competence_dominante: string;
-  notes_recentes: Record<string, number>;
-  besoins_particuliers: string | null;
-}
-
-interface AgendaItem {
-  id: string;
-  parentId: string;
-  titre: string;
-  date: string;
-  heure: string | null;
-  lieu: string | null;
-  enfant_concerne: string | null;
-  type: "reunion" | "examen" | "echeance" | "tache" | "vacances" | "evenement" | "bulletin";
-  source: string;
-  description: string;
-  fait: boolean;
+  premier_enfant_en_allemagne?: boolean;
 }
 
 interface AgendaResponse {
@@ -70,63 +45,99 @@ interface ContactItem {
   messages: Array<{ date: string; texte: string }>;
 }
 
-interface PersonneRessource {
-  id: string;
-  prenom: string;
-  nom: string;
-  role: string;
-  langues: string[];
-  sujets_expertise: string[];
-  accepte_contact_plateforme: boolean;
-  disponibilite: string;
-  description: string;
+// ─── Section title component ───────────────────────────────────────────────────
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-5 mt-9 first:mt-0">
+      <h2 className="font-display font-semibold text-xl text-foreground">{children}</h2>
+      <div
+        className="mt-2 rounded-full"
+        style={{ width: "48px", height: "4px", background: "var(--color-accent)" }}
+      />
+    </div>
+  );
 }
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
+// ─── Profile info row ─────────────────────────────────────────────────────────
 
-function getMoyenneColor(moyenne: number | null): { bg: string; text: string; label: string } {
-  if (moyenne === null) return { bg: "bg-slate-100", text: "text-slate-500", label: "Pas encore évalué" };
-  if (moyenne <= 2.0) return { bg: "bg-green-100", text: "text-green-700", label: "Très bons résultats" };
-  if (moyenne <= 3.0) return { bg: "bg-yellow-100", text: "text-yellow-700", label: "Bons résultats" };
-  if (moyenne <= 4.0) return { bg: "bg-orange-100", text: "text-orange-700", label: "Résultats moyens" };
-  return { bg: "bg-red-100", text: "text-red-700", label: "En difficulté" };
+function ProfileRow({ icon, children }: { icon: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-start gap-2 text-sm">
+      <span className="shrink-0 text-base leading-snug">{icon}</span>
+      <span className="text-foreground">{children}</span>
+    </div>
+  );
 }
 
-function getNoteColor(note: number): string {
-  if (note <= 2) return "text-green-700";
-  if (note === 3) return "text-yellow-700";
-  if (note === 4) return "text-orange-700";
-  return "text-red-700";
-}
+// ─── Hardcoded personnes ressources ───────────────────────────────────────────
 
-function getTypeIcon(type: AgendaItem["type"]): string {
-  const icons: Record<AgendaItem["type"], string> = {
-    reunion: "📋",
-    examen: "📝",
-    echeance: "⏰",
-    tache: "✅",
-    vacances: "🏖️",
-    evenement: "🎉",
-    bulletin: "📊",
-  };
-  return icons[type] ?? "📅";
-}
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-}
-
-function isInNext7Days(dateStr: string): boolean {
-  const now = new Date();
-  const d = new Date(dateStr + "T00:00:00");
-  const diff = d.getTime() - now.getTime();
-  return diff >= 0 && diff <= 7 * 24 * 60 * 60 * 1000;
-}
-
-function isPast(dateStr: string): boolean {
-  return new Date(dateStr + "T00:00:00") < new Date();
-}
+const PERSONNES: PersonneRessource[] = [
+  {
+    id: "PR-001",
+    prenom: "Fatma", nom: "Demir",
+    role: "Parent-relais (Buddy)",
+    langues: ["Turc", "Allemand courant"],
+    ecole_rattachee: "Friedrich-Schiller-Gymnasium",
+    sujets_expertise: ["Gymnasium", "orientation", "communication avec l'école"],
+    accepte_contact_plateforme: true,
+    disponibilite: "Flexible, préfère les soirs en semaine",
+    description: "Parent expérimentée en Allemagne depuis 8 ans. Connaît très bien le système scolaire.",
+  },
+  {
+    id: "PR-002",
+    prenom: "Olena", nom: "Kovalenko",
+    role: "Parent-relais (Buddy)",
+    langues: ["Ukrainien", "Russe", "Allemand intermédiaire"],
+    ecole_rattachee: "Grundschule Sontheim",
+    sujets_expertise: ["Grundschule", "intégration", "DaZ"],
+    accepte_contact_plateforme: true,
+    disponibilite: "Soirs en semaine",
+    description: "Arrivée d'Ukraine il y a 2 ans. Expérience récente d'intégration scolaire.",
+  },
+  {
+    id: "PR-003",
+    prenom: "Ahmad", nom: "Hassan",
+    role: "Parent-relais (Buddy)",
+    langues: ["Arabe", "Allemand"],
+    sujets_expertise: ["Realschule", "aides financières", "BuT"],
+    accepte_contact_plateforme: true,
+    disponibilite: "Mercredi et week-ends",
+    description: "Expert en aides financières (BuT). Parent d'un élève en Realschule.",
+  },
+  {
+    id: "PR-004",
+    prenom: "Ingrid", nom: "Weber",
+    role: "Secrétariat",
+    ecole_rattachee: "Friedrich-Schiller-Gymnasium",
+    langues: ["Allemand"],
+    sujets_expertise: ["inscription", "documents", "administratif"],
+    accepte_contact_plateforme: true,
+    disponibilite: "Lun-Ven 8h-12h et 14h-16h",
+    description: "Secrétaire du FSG Heilbronn.",
+  },
+  {
+    id: "PR-005",
+    prenom: "Thomas", nom: "Müller",
+    role: "Conseiller d'orientation",
+    ecole_rattachee: "Friedrich-Schiller-Gymnasium",
+    langues: ["Allemand", "Anglais"],
+    sujets_expertise: ["orientation scolaire", "Gymnasium", "Abitur"],
+    accepte_contact_plateforme: true,
+    disponibilite: "Sur rendez-vous",
+    description: "Conseiller d'orientation au Friedrich-Schiller-Gymnasium.",
+  },
+  {
+    id: "PR-007",
+    prenom: "Elif", nom: "Arslan",
+    role: "Médiatrice interculturelle",
+    langues: ["Turc", "Allemand", "Anglais"],
+    sujets_expertise: ["médiation", "droits des parents", "intégration"],
+    accepte_contact_plateforme: true,
+    disponibilite: "Lundi, Mercredi, Vendredi",
+    description: "Médiatrice interculturelle au Schulamt Heilbronn.",
+  },
+];
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────────────
 
@@ -138,10 +149,12 @@ export default function DashboardContent() {
   const [children, setChildren] = useState<Child[]>([]);
   const [agenda, setAgenda] = useState<AgendaResponse | null>(null);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
-  const [personnes, setPersonnes] = useState<PersonneRessource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [contactModal, setContactModal] = useState<PersonneRessource | null>(null);
+
+  // Agenda view toggle — list by default on mobile
+  const [agendaView, setAgendaView] = useState<"calendar" | "list">("calendar");
 
   useEffect(() => {
     if (!parentId) {
@@ -154,110 +167,18 @@ export default function DashboardContent() {
       fetch(`/api/parents/${parentId}`).then((r) => r.json()),
       fetch(`/api/agenda/${parentId}`).then((r) => r.json()),
       fetch(`/api/contacts/${parentId}`).then((r) => r.json()),
-      fetch("/api/parents").then((r) => r.json()),
     ])
-      .then(([parentData, agendaData, contactsData, allParentsData]) => {
+      .then(([parentData, agendaData, contactsData]) => {
         const pd = parentData as { parent?: Parent; enfants?: Child[] };
         if (pd.parent) setParent(pd.parent);
         if (pd.enfants) setChildren(pd.enfants);
-
         setAgenda(agendaData as AgendaResponse);
         const cd = contactsData as { contacts?: ContactItem[] };
         setContacts(cd.contacts ?? []);
-
-        // Extract personnes ressources from parents data (those with roles)
-        // We'll fetch them via a separate endpoint if available, else use static data
-        // For now, try to load via the parents endpoint personnes context
-        void allParentsData; // used later if needed
-
-        // Fetch personnes ressources
-        fetch("/api/parents")
-          .then(() => {
-            // The parents API doesn't expose personnes ressources directly
-            // We'll create a simple list from what we know
-          })
-          .catch(() => {});
       })
-      .catch(() => {
-        setError("Erreur lors du chargement des données.");
-      })
+      .catch(() => setError("Erreur lors du chargement des données."))
       .finally(() => setLoading(false));
   }, [parentId]);
-
-  // Fetch personnes ressources
-  useEffect(() => {
-    // We can read from /api/parents/[id] or build a custom endpoint
-    // For now, use hardcoded data from inventaire knowledge
-    const hardcodedPersonnes: PersonneRessource[] = [
-      {
-        id: "PR-001",
-        prenom: "Fatma",
-        nom: "Demir",
-        role: "Parent-relais (Buddy)",
-        langues: ["Turc", "Allemand"],
-        sujets_expertise: ["Gymnasium", "orientation", "vie scolaire"],
-        accepte_contact_plateforme: true,
-        disponibilite: "Week-ends, soirs après 18h",
-        description: "Parent d'un élève au Friedrich-Schiller-Gymnasium. Peut aider en turc et allemand.",
-      },
-      {
-        id: "PR-002",
-        prenom: "Olena",
-        nom: "Kovalenko",
-        role: "Parent-relais (Buddy)",
-        langues: ["Ukrainien", "Allemand", "Anglais"],
-        sujets_expertise: ["Grundschule", "inscription", "soutien scolaire"],
-        accepte_contact_plateforme: true,
-        disponibilite: "Lundi-Vendredi 9h-12h",
-        description: "Parent d'élèves en Grundschule. Parle ukrainien, allemand et anglais.",
-      },
-      {
-        id: "PR-003",
-        prenom: "Ahmad",
-        nom: "Hassan",
-        role: "Parent-relais (Buddy)",
-        langues: ["Arabe", "Allemand"],
-        sujets_expertise: ["Realschule", "aides financières", "BuT"],
-        accepte_contact_plateforme: true,
-        disponibilite: "Mercredi et week-ends",
-        description: "Parent d'un élève en Realschule. Expert en aides financières (BuT).",
-      },
-      {
-        id: "PR-004",
-        prenom: "Ingrid",
-        nom: "Weber",
-        role: "Secrétariat",
-        langues: ["Allemand"],
-        sujets_expertise: ["inscription", "documents", "administratif"],
-        accepte_contact_plateforme: true,
-        disponibilite: "Lundi-Vendredi 8h-12h et 14h-16h",
-        description: "Secrétaire du Friedrich-Schiller-Gymnasium Heilbronn.",
-      },
-      {
-        id: "PR-005",
-        prenom: "Thomas",
-        nom: "Müller",
-        role: "Conseiller d'orientation",
-        langues: ["Allemand", "Anglais"],
-        sujets_expertise: ["orientation scolaire", "Gymnasium", "Oberstufe", "Abitur"],
-        accepte_contact_plateforme: true,
-        disponibilite: "Sur rendez-vous",
-        description: "Conseiller d'orientation au Friedrich-Schiller-Gymnasium.",
-      },
-      {
-        id: "PR-007",
-        prenom: "Elif",
-        nom: "Arslan",
-        role: "Médiatrice interculturelle",
-        langues: ["Turc", "Allemand", "Anglais"],
-        sujets_expertise: ["médiation", "droits des parents", "intégration"],
-        accepte_contact_plateforme: true,
-        disponibilite: "Lundi, Mercredi, Vendredi",
-        description: "Médiatrice interculturelle au Schulamt Heilbronn. Aide les familles immigrées.",
-      },
-    ];
-    setPersonnes(hardcodedPersonnes);
-  }, []);
 
   async function handleToggleDone(item: AgendaItem) {
     if (!parentId) return;
@@ -278,29 +199,52 @@ export default function DashboardContent() {
     });
   }
 
+  // ── Loading / Error states ─────────────────────────────────────────────────
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-slate-400">
-        Chargement du dashboard...
+      <div className="min-h-screen bg-canvas-soft flex flex-col">
+        <NavBar parentId={parentId} activePage="dashboard" />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-full border-2 border-primary-lighter"
+              style={{ borderTopColor: "var(--color-primary)", animation: "spin 0.8s linear infinite" }}
+            />
+            <p className="text-muted text-sm">Chargement du dashboard…</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (error || !parent) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">{error ?? "Parent introuvable"}</p>
-          <Link href="/" className="text-blue-600 underline">
-            Retour à l&apos;accueil
-          </Link>
+      <div className="min-h-screen bg-canvas-soft flex flex-col">
+        <NavBar parentId={parentId} activePage="dashboard" />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-danger mb-4">{error ?? "Parent introuvable"}</p>
+            <Link href="/" className="text-primary underline text-sm">← Retour à l&apos;accueil</Link>
+          </div>
         </div>
       </div>
     );
   }
 
+  const now = new Date();
+  const monthLabel = now.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+  const allEvents = agenda?.evenements ?? [];
+
+  // Contacts: merge personne ressources (prioritize those who've been contacted)
+  const contactedIds = new Set(contacts.map((c) => c.personneRessourceId));
+  const personnesWithContext = PERSONNES.map((p) => {
+    const c = contacts.find((c) => c.personneRessourceId === p.id);
+    return { personne: p, contexte: c?.contexte };
+  });
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-canvas-soft pb-20 md:pb-0">
       {/* Contact modal */}
       {contactModal && parentId && (
         <ContactModal
@@ -311,272 +255,232 @@ export default function DashboardContent() {
           description={contactModal.description}
           parentId={parentId}
           onClose={() => setContactModal(null)}
-          onSuccess={() => setTimeout(() => setContactModal(null), 2000)}
+          onSuccess={() => setTimeout(() => setContactModal(null), 1800)}
         />
       )}
 
-      {/* Header */}
-      <header className="bg-blue-600 text-white px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="text-white hover:text-blue-200 text-sm font-medium">
-            ← Accueil
-          </Link>
+      {/* NavBar */}
+      <NavBar parentId={parentId} activePage="dashboard" />
+
+      {/* Dashboard header */}
+      <div className="bg-white border-b border-line px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold">SchoolBridge — Dashboard de {parent.prenom}</h1>
-            <p className="text-xs text-blue-200">{parent.ville} · {parent.langue_maternelle}</p>
+            <h1 className="font-display font-bold text-xl text-foreground">
+              Bonjour, {parent.prenom} 👋
+            </h1>
+            <p className="text-sm text-muted mt-0.5">
+              {parent.ville}{parent.quartier ? `, ${parent.quartier}` : ""} · {parent.langue_maternelle}
+            </p>
           </div>
+          <p className="hidden md:block text-sm text-muted capitalize">{monthLabel}</p>
         </div>
-        <Link
-          href={`/chat?parentId=${parentId}`}
-          className="bg-white text-blue-600 px-4 py-2 rounded-xl font-semibold text-sm hover:bg-blue-50 transition-colors"
-        >
-          💬 Chat
-        </Link>
-      </header>
+      </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="max-w-6xl mx-auto px-4 py-6">
 
-        {/* ── A. Mes Enfants ─────────────────────────────────────────────────── */}
-        <section className="lg:col-span-2">
-          <h2 className="text-xl font-bold text-slate-800 mb-4">Mes Enfants</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {children.map((child) => {
-              const mc = getMoyenneColor(child.moyenne_generale);
-              return (
-                <div key={child.id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="font-bold text-slate-800 text-lg">{child.prenom} {child.nom}</h3>
-                      <p className="text-sm text-slate-500">{child.age} ans · {child.classe}</p>
-                      <p className="text-xs text-slate-400">{child.type_ecole} — {child.nom_ecole}</p>
-                    </div>
-                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${mc.bg} ${mc.text}`}>
-                      {child.moyenne_generale !== null ? `${child.moyenne_generale}/6` : "—"}
-                    </span>
-                  </div>
+        {/* ── A. MES ENFANTS ─────────────────────────────────────────────────── */}
+        <SectionTitle>Mes enfants</SectionTitle>
 
-                  <div className={`text-xs font-medium px-3 py-1.5 rounded-lg ${mc.bg} ${mc.text} mb-3`}>
-                    {mc.label}
-                  </div>
-
-                  {child.competence_dominante && (
-                    <div className="mb-3">
-                      <span className="inline-block text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-                        ⭐ {child.competence_dominante}
-                      </span>
-                    </div>
-                  )}
-
-                  {child.matieres_fortes.length > 0 && (
-                    <div className="mb-2">
-                      <p className="text-xs text-slate-500 mb-1">Points forts</p>
-                      <div className="flex flex-wrap gap-1">
-                        {child.matieres_fortes.map((m) => (
-                          <span key={m} className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                            {m}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {child.matieres_faibles.length > 0 && (
-                    <div className="mb-2">
-                      <p className="text-xs text-slate-500 mb-1">À renforcer</p>
-                      <div className="flex flex-wrap gap-1">
-                        {child.matieres_faibles.map((m) => (
-                          <span key={m} className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
-                            {m}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {Object.keys(child.notes_recentes).length > 0 && (
-                    <div className="mt-3 border-t border-slate-100 pt-2">
-                      <p className="text-xs text-slate-500 mb-1">Notes récentes</p>
-                      <div className="flex flex-wrap gap-2">
-                        {Object.entries(child.notes_recentes).map(([matiere, note]) => (
-                          <span key={matiere} className={`text-xs font-semibold ${getNoteColor(note)}`}>
-                            {matiere}: {note}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {child.besoins_particuliers && (
-                    <div className="mt-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-2 py-1">
-                      ⚠️ {child.besoins_particuliers}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+        {children.length === 0 ? (
+          <p className="text-muted text-sm">Aucun enfant enregistré.</p>
+        ) : (
+          /* Mobile: horizontal carousel; desktop: 2-col grid */
+          <div
+            className="flex md:grid md:grid-cols-2 gap-4 overflow-x-auto md:overflow-visible pb-2 md:pb-0"
+            style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
+          >
+            {children.map((child, idx) => (
+              <div
+                key={child.id}
+                className="shrink-0 md:shrink w-72 md:w-auto"
+                style={{ scrollSnapAlign: "start" }}
+              >
+                <ChildCard child={child} colorIndex={idx} />
+              </div>
+            ))}
           </div>
-        </section>
+        )}
 
-        {/* ── B. Agenda ──────────────────────────────────────────────────────── */}
-        <section>
-          <h2 className="text-xl font-bold text-slate-800 mb-4">Agenda</h2>
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            {!agenda || agenda.evenements.length === 0 ? (
-              <div className="p-6 text-center text-slate-400 text-sm">Aucun événement dans l&apos;agenda.</div>
-            ) : (
-              <div className="divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
-                {agenda.evenements.map((item) => {
-                  const inNext7 = isInNext7Days(item.date);
-                  const past = isPast(item.date);
-                  const isOverdue = past && !item.fait && (item.type === "tache" || item.type === "echeance");
+        {/* ── B. AGENDA ──────────────────────────────────────────────────────── */}
+        <SectionTitle>Agenda</SectionTitle>
 
-                  return (
-                    <div
-                      key={item.id}
-                      className={`px-4 py-3 flex items-start gap-3 transition-colors ${
-                        isOverdue
-                          ? "bg-red-50"
-                          : inNext7
-                          ? "bg-blue-50 border-l-4 border-blue-400"
-                          : item.fait
-                          ? "opacity-50"
-                          : ""
-                      }`}
-                    >
-                      <span className="text-xl shrink-0 mt-0.5">{getTypeIcon(item.type)}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-medium ${item.fait ? "line-through text-slate-400" : "text-slate-800"}`}>
-                          {item.titre}
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          {formatDate(item.date)}{item.heure ? ` à ${item.heure}` : ""}
-                          {item.enfant_concerne ? ` · ${item.enfant_concerne}` : ""}
-                        </p>
-                        {item.description && (
-                          <p className="text-xs text-slate-400 mt-0.5 truncate">{item.description}</p>
-                        )}
-                        {isOverdue && (
-                          <span className="text-xs text-red-600 font-medium">En retard</span>
-                        )}
-                      </div>
-                      {(item.type === "tache" || item.type === "echeance") && (
-                        <button
-                          onClick={() => handleToggleDone(item)}
-                          className={`shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                            item.fait
-                              ? "bg-green-500 border-green-500 text-white"
-                              : "border-slate-300 hover:border-green-400"
-                          }`}
-                          title={item.fait ? "Marquer comme non fait" : "Marquer comme fait"}
-                        >
-                          {item.fait && "✓"}
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
+        {/* View toggle */}
+        <div className="flex items-center gap-1 mb-4 bg-white border border-line rounded-xl p-1 self-start w-fit" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+          <button
+            onClick={() => setAgendaView("calendar")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              agendaView === "calendar"
+                ? "text-white"
+                : "text-muted hover:bg-canvas-muted"
+            }`}
+            style={agendaView === "calendar" ? { background: "var(--color-primary)" } : {}}
+          >
+            📅 Calendrier
+          </button>
+          <button
+            onClick={() => setAgendaView("list")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              agendaView === "list"
+                ? "text-white"
+                : "text-muted hover:bg-canvas-muted"
+            }`}
+            style={agendaView === "list" ? { background: "var(--color-primary)" } : {}}
+          >
+            📋 Liste
+          </button>
+        </div>
+
+        {agendaView === "calendar" ? (
+          /* Desktop: calendar (left 60%) + prochainement (right 40%) */
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            {/* Calendar */}
+            <div className="lg:col-span-3">
+              <CalendarView events={allEvents} />
+            </div>
+
+            {/* Prochainement sidebar */}
+            <div className="lg:col-span-2">
+              <div
+                className="bg-white rounded-2xl border border-line p-4 flex flex-col gap-3"
+                style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}
+              >
+                <h3 className="font-display font-semibold text-sm text-foreground">Prochainement</h3>
+                {agenda?.prochains && agenda.prochains.length > 0 ? (
+                  <div className="flex flex-col gap-2">
+                    {agenda.prochains.slice(0, 6).map((item) => {
+                      const d = new Date(item.date + "T00:00:00");
+                      const dateLabel = d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+                      return (
+                        <div key={item.id} className="flex items-start gap-2 py-2 border-b border-line last:border-0">
+                          <div
+                            className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
+                            style={{ background: TYPE_DOT_COLOR[item.type] }}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-semibold text-foreground leading-snug truncate">
+                              {item.titre}
+                            </p>
+                            <p className="text-[11px] text-muted mt-0.5">
+                              {dateLabel}{item.heure ? ` · ${item.heure}` : ""}
+                              {item.enfant_concerne ? ` · ${item.enfant_concerne}` : ""}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted">Aucun événement dans les 14 prochains jours.</p>
+                )}
+                {agenda?.en_retard && agenda.en_retard.length > 0 && (
+                  <div className="mt-1 p-2 bg-red-50 border border-red-200 rounded-xl">
+                    <p className="text-xs font-semibold text-red-700">
+                      ⚠️ {agenda.en_retard.length} tâche{agenda.en_retard.length > 1 ? "s" : ""} en retard
+                    </p>
+                    <p className="text-xs text-red-600 mt-0.5">Passez en vue Liste pour gérer.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <AgendaListView events={allEvents} onToggleDone={handleToggleDone} />
+        )}
+
+        {/* ── C. MES CONTACTS ────────────────────────────────────────────────── */}
+        <SectionTitle>Mes contacts</SectionTitle>
+
+        {personnesWithContext.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-line p-6 text-center" style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}>
+            <p className="text-muted text-sm mb-3">
+              Vos contacts apparaîtront ici au fil de vos conversations avec SchoolBridge.
+            </p>
+            <Link
+              href={parentId ? `/community?parentId=${parentId}` : "/community"}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-white px-4 py-2 rounded-xl transition-colors"
+              style={{ background: "var(--color-primary)" }}
+            >
+              👥 Voir la communauté
+            </Link>
+          </div>
+        ) : (
+          <>
+            {/* Highlight contacted ones first */}
+            {contactedIds.size > 0 && (
+              <div className="mb-3">
+                <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
+                  Mes contacts ({contactedIds.size})
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {personnesWithContext
+                    .filter(({ personne }) => contactedIds.has(personne.id))
+                    .map(({ personne, contexte }) => (
+                      <ContactCard
+                        key={personne.id}
+                        personne={personne}
+                        contexte={contexte}
+                        parentId={parentId}
+                        onContact={setContactModal}
+                      />
+                    ))}
+                </div>
               </div>
             )}
-          </div>
-        </section>
 
-        {/* ── C. Contacts ────────────────────────────────────────────────────── */}
-        <section>
-          <h2 className="text-xl font-bold text-slate-800 mb-4">Contacts & Personnes-ressources</h2>
-
-          {contacts.length > 0 && (
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold text-slate-600 mb-2">Mes contacts</h3>
-              <div className="flex flex-col gap-2">
-                {contacts.map((c) => (
-                  <div key={c.id} className="bg-white rounded-xl border border-slate-200 px-4 py-3">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium text-slate-800 text-sm">{c.nom}</p>
-                        <p className="text-xs text-slate-500">{c.role}</p>
-                      </div>
-                      <span className="text-xs text-slate-400">{c.messages.length} message{c.messages.length !== 1 ? "s" : ""}</span>
-                    </div>
-                  </div>
+            <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">
+              Personnes disponibles
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {personnesWithContext
+                .filter(({ personne }) => !contactedIds.has(personne.id))
+                .map(({ personne }) => (
+                  <ContactCard
+                    key={personne.id}
+                    personne={personne}
+                    parentId={parentId}
+                    onContact={setContactModal}
+                  />
                 ))}
-              </div>
             </div>
-          )}
+          </>
+        )}
 
-          <div>
-            <h3 className="text-sm font-semibold text-slate-600 mb-2">Personnes disponibles</h3>
-            <div className="flex flex-col gap-2">
-              {personnes.filter(p => p.accepte_contact_plateforme).map((p) => (
-                <div key={p.id} className="bg-white rounded-xl border border-slate-200 px-4 py-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-medium text-slate-800 text-sm">{p.prenom} {p.nom}</p>
-                      <p className="text-xs text-slate-500">{p.role}</p>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {p.langues.map((l) => (
-                          <span key={l} className="text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-full">
-                            {l}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setContactModal(p)}
-                      className="shrink-0 text-xs bg-blue-100 text-blue-700 hover:bg-blue-200 px-3 py-1.5 rounded-lg font-medium transition-colors"
-                    >
-                      Contacter
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ── D. MON PROFIL ──────────────────────────────────────────────────── */}
+        <SectionTitle>Mon profil</SectionTitle>
 
-        {/* ── D. Mon Profil ──────────────────────────────────────────────────── */}
-        <section className="lg:col-span-2">
-          <h2 className="text-xl font-bold text-slate-800 mb-4">Mon Profil</h2>
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Nom complet</p>
-                <p className="text-slate-800 font-medium">{parent.prenom} {parent.nom}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Langue maternelle</p>
-                <p className="text-slate-800">{parent.langue_maternelle}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Pays d&apos;origine</p>
-                <p className="text-slate-800">{parent.pays_origine}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Ville</p>
-                <p className="text-slate-800">{parent.ville}{parent.quartier ? ` — ${parent.quartier}` : ""}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">En Allemagne depuis</p>
-                <p className="text-slate-800">{parent.en_allemagne_depuis}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Niveau d&apos;allemand</p>
-                <p className="text-slate-800">{parent.niveau_allemand}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Email</p>
-                <p className="text-slate-800 text-sm">{parent.email}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Téléphone</p>
-                <p className="text-slate-800">{parent.telephone}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Connaissance du système</p>
-                <p className="text-slate-800">{parent.comprehension_systeme_scolaire}</p>
-              </div>
-            </div>
+        <div
+          className="rounded-2xl border border-line p-5 flex flex-col gap-2.5"
+          style={{ background: "var(--color-canvas-muted)", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
+        >
+          <p className="font-display font-semibold text-foreground text-base">
+            {parent.prenom} {parent.nom}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <ProfileRow icon="🌍">
+              {parent.langue_maternelle} · {parent.pays_origine}
+            </ProfileRow>
+            <ProfileRow icon="📍">
+              {parent.ville}{parent.quartier ? `, ${parent.quartier}` : ""}
+            </ProfileRow>
+            <ProfileRow icon="🇩🇪">
+              En Allemagne depuis {parent.en_allemagne_depuis}
+            </ProfileRow>
+            <ProfileRow icon="📖">
+              Niveau d&apos;allemand : {parent.niveau_allemand}
+            </ProfileRow>
+            {parent.premier_enfant_en_allemagne && (
+              <ProfileRow icon="👶">
+                Premier enfant scolarisé en Allemagne
+              </ProfileRow>
+            )}
+            <ProfileRow icon="🧭">
+              Compréhension du système : {parent.comprehension_systeme_scolaire}
+            </ProfileRow>
+            <ProfileRow icon="✉️">{parent.email}</ProfileRow>
+            <ProfileRow icon="📞">{parent.telephone}</ProfileRow>
           </div>
-        </section>
+        </div>
 
       </div>
     </div>

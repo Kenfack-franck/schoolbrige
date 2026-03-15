@@ -13,7 +13,7 @@ import {
   buildContextPrompt,
   buildAnonymousPrompt,
 } from "@/lib/prompts";
-import { addAgendaItems, type AgendaItem } from "@/lib/store";
+import { addAgendaItems, getRecentPostsForContext, addCommunityPost, type AgendaItem, type CommunityPost } from "@/lib/store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -42,6 +42,11 @@ interface GeminiComplete {
     description: string;
   }>;
   recommended_contacts?: string[]; // array of PersonneRessource IDs
+  community_question?: {
+    titre: string;
+    contenu: string;
+    ecole_cible: string | null;
+  };
 }
 
 type GeminiResponse = GeminiNeedFiles | GeminiComplete;
@@ -144,7 +149,19 @@ export async function POST(req: NextRequest) {
         const children = loadChildrenOf(parentId);
 
         const contextPrompt = buildContextPrompt(parent, children, inventaire, personnes);
-        const fullSystemPrompt = `${SCHOOLBRIDGE_SYSTEM_PROMPT}\n\n${contextPrompt}`;
+
+        // Build community posts context
+        const recentPosts = getRecentPostsForContext(parentId, 10);
+        let communityContext = "";
+        if (recentPosts.length > 0) {
+          const postLines = recentPosts.map(p => {
+            const shortContent = p.contenu.slice(0, 200);
+            return `[${p.id}] ${p.auteur_nom} (${p.auteur_role}${p.auteur_ecole ? `, ${p.auteur_ecole}` : ""}, ${p.date}) : "${p.titre} — ${shortContent}${p.contenu.length > 200 ? "..." : ""}"`;
+          }).join("\n\n");
+          communityContext = `\n\n=== POSTS RÉCENTS DE LA COMMUNAUTÉ (écoles du parent) ===\n\n${postLines}`;
+        }
+
+        const fullSystemPrompt = `${SCHOOLBRIDGE_SYSTEM_PROMPT}\n\n${contextPrompt}${communityContext}`;
 
         const firstCallMessages: ChatMessage[] = [
           ...history,
@@ -160,6 +177,7 @@ export async function POST(req: NextRequest) {
         let sources: string[];
         let agendaItems: GeminiComplete["agenda_items"] | undefined;
         let recommendedContacts: string[] | undefined;
+        let communityQuestion: GeminiComplete["community_question"] | undefined;
 
         if (firstResponse.status === "need_files") {
           controller.enqueue(
@@ -185,11 +203,13 @@ export async function POST(req: NextRequest) {
           sources = secondResponse.sources ?? firstResponse.requested_files;
           agendaItems = secondResponse.agenda_items;
           recommendedContacts = secondResponse.recommended_contacts;
+          communityQuestion = secondResponse.community_question;
         } else {
           responseText = firstResponse.response;
           sources = firstResponse.sources ?? [];
           agendaItems = (firstResponse as GeminiComplete).agenda_items;
           recommendedContacts = (firstResponse as GeminiComplete).recommended_contacts;
+          communityQuestion = (firstResponse as GeminiComplete).community_question;
         }
 
         await streamWords(responseText, controller);
@@ -224,6 +244,31 @@ export async function POST(req: NextRequest) {
           );
           if (recommendedPersons.length > 0) {
             controller.enqueue(sseEvent("contacts", { contacts: recommendedPersons }));
+          }
+        }
+
+        // Process community_question if present
+        if (communityQuestion && parentId) {
+          const communityParent = parents.find(p => p.id === parentId);
+          if (communityParent) {
+            addCommunityPost({
+              auteur_id: parentId,
+              auteur_nom: `${communityParent.prenom} ${communityParent.nom}`,
+              auteur_role: "Parent",
+              auteur_ecole: null,
+              type: "question",
+              ecole_cible: communityQuestion.ecole_cible ?? null,
+              date: new Date().toISOString().slice(0, 10),
+              titre: communityQuestion.titre,
+              contenu: communityQuestion.contenu,
+              langue_originale: communityParent.langue_maternelle,
+              epingle: false,
+              tags: ["question"],
+            } as Omit<CommunityPost, "id">);
+            controller.enqueue(sseEvent("community", {
+              action: "question_posted",
+              titre: communityQuestion.titre,
+            }));
           }
         }
 

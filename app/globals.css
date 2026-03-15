@@ -1,6 +1,108 @@
 @import "tailwindcss";
 
+@theme {
+  /* ── Typography ─────────────────────────────────────────────────────── */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* ── Brand palette ──────────────────────────────────────────────────── */
+  --color-primary: #1B4B6B;
+  --color-primary-light: #2A6F97;
+  --color-primary-lighter: #E8F4FD;
+
+  --color-accent: #E8913A;
+  --color-accent-dark: #D17A2A;
+  --color-accent-light: #FDF0E2;
+
+  /* ── Status ─────────────────────────────────────────────────────────── */
+  --color-success: #2D8A56;
+  --color-success-light: #D1FAE5;
+  --color-warning: #D4A017;
+  --color-warning-light: #FEF3C7;
+  --color-danger: #C43E3E;
+  --color-danger-light: #FEE2E2;
+  --color-info: #2A6F97;
+  --color-info-light: #E8F4FD;
+
+  /* ── Text ───────────────────────────────────────────────────────────── */
+  --color-foreground: #1A1A2E;
+  --color-muted: #6B7280;
+
+  /* ── Surfaces ───────────────────────────────────────────────────────── */
+  --color-canvas: #FFFFFF;
+  --color-canvas-soft: #F8FAFC;
+  --color-canvas-muted: #F1F5F9;
+
+  /* ── Borders ────────────────────────────────────────────────────────── */
+  --color-line: #E2E8F0;
+  --color-line-strong: #CBD5E1;
+}
+
+/* CSS custom properties for direct var() usage */
+:root {
+  --color-primary: #1B4B6B;
+  --color-primary-light: #2A6F97;
+  --color-primary-lighter: #E8F4FD;
+  --color-accent: #E8913A;
+  --color-accent-light: #FDF0E2;
+  --color-success: #2D8A56;
+  --color-warning: #D4A017;
+  --color-danger: #C43E3E;
+  --color-foreground: #1A1A2E;
+  --color-muted: #6B7280;
+  --color-bg: #FFFFFF;
+  --color-bg-secondary: #F8FAFC;
+  --color-bg-tertiary: #F1F5F9;
+  --color-border: #E2E8F0;
+}
+
+/* ── Global base ────────────────────────────────────────────────────────── */
+html {
+  font-size: 17px; /* base scale-up: toutes les unités rem suivent */
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────── */
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40%           { transform: translateY(-6px); }
+}
+
+@keyframes border-pulse {
+  0%, 100% { border-color: var(--color-accent); opacity: 1; }
+  50%       { border-color: var(--color-accent-dark); opacity: 0.7; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes slide-in-bottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
 }

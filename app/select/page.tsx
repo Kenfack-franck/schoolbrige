@@ -39,68 +39,82 @@ export default function SelectPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-canvas-soft">
       {/* Header */}
-      <header className="bg-blue-600 text-white px-6 py-4 flex items-center gap-4">
-        <Link href="/" className="text-white hover:text-blue-200 transition-colors text-sm font-medium">
+      <header className="h-14 bg-white border-b border-line px-6 flex items-center gap-4">
+        <Link
+          href="/"
+          className="font-display font-bold text-primary text-lg flex items-center gap-2 hover:text-primary-light transition-colors"
+        >
+          🎓 SchoolBridge
+        </Link>
+        <Link href="/" className="ml-auto text-sm text-muted hover:text-foreground transition-colors">
           ← Accueil
         </Link>
-        <div>
-          <h1 className="text-xl font-bold">SchoolBridge</h1>
-          <p className="text-xs text-blue-200">Sélectionnez votre profil</p>
-        </div>
       </header>
 
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold text-slate-800 mb-2">Qui êtes-vous ?</h2>
-        <p className="text-slate-500 mb-6">Cliquez sur votre nom pour accéder à votre espace.</p>
+        <h2 className="font-display font-bold text-2xl text-foreground mb-2">Qui êtes-vous ?</h2>
+        <p className="text-muted mb-6">Cliquez sur votre nom pour accéder à votre espace.</p>
 
         {loading && (
-          <div className="text-center text-slate-400 py-12">Chargement...</div>
+          <div className="text-center text-muted py-12">Chargement...</div>
         )}
         {error && (
-          <div className="text-red-600 bg-red-50 border border-red-200 rounded-xl p-4">{error}</div>
+          <div className="text-danger bg-danger-light border border-danger rounded-xl p-4">{error}</div>
         )}
 
         {/* Parents list */}
         <div className="flex flex-col gap-3">
           {parents.map((p) => (
-            <div key={p.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <div
+                key={p.id}
+                className="bg-white border border-line rounded-2xl overflow-hidden"
+                style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}
+              >
               {/* Parent card header */}
               <button
                 onClick={() => handleCardClick(p.id)}
-                className="w-full text-left px-5 py-4 flex items-center justify-between transition-all hover:bg-slate-50"
+                className="w-full text-left px-5 py-4 flex items-center justify-between transition-all duration-200 hover:bg-canvas-soft"
               >
                 <div>
-                  <p className="font-semibold text-slate-800 text-lg">
+                  <p className="font-display font-semibold text-foreground text-lg">
                     {p.prenom} {p.nom}
                   </p>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-muted">
                     {p.langue_maternelle} · {p.pays_origine}
                     {p.enfants_prenoms.length > 0 && ` · ${p.enfants_prenoms.join(", ")}`}
                   </p>
                 </div>
-                <span className={`text-slate-400 transition-transform ${expandedId === p.id ? "rotate-90" : ""}`}>
+                <span className={`text-muted transition-transform duration-200 ${expandedId === p.id ? "rotate-90" : ""}`}>
                   ▶
                 </span>
               </button>
 
               {/* Expanded action buttons */}
               {expandedId === p.id && (
-                <div className="border-t border-slate-100 px-5 py-4 flex flex-col sm:flex-row gap-3 bg-slate-50">
+                <div className="border-t border-line px-5 py-4 flex flex-col sm:flex-row gap-3 bg-canvas-soft">
                   <button
                     onClick={() => router.push(`/chat?parentId=${p.id}`)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-xl font-semibold text-sm hover:bg-blue-700 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 text-white px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-200 hover:opacity-90"
+                    style={{ background: "var(--color-primary)" }}
                   >
                     <span>💬</span>
-                    <span>Discuter avec SchoolBridge</span>
+                    <span>Discuter</span>
                   </button>
                   <button
                     onClick={() => router.push(`/dashboard?parentId=${p.id}`)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-white border border-blue-300 text-blue-700 px-4 py-3 rounded-xl font-semibold text-sm hover:bg-blue-50 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 bg-white border border-line text-foreground px-4 py-3 rounded-xl font-semibold text-sm hover:bg-canvas-soft transition-all duration-200"
                   >
                     <span>📊</span>
-                    <span>Voir mon dashboard</span>
+                    <span>Dashboard</span>
+                  </button>
+                  <button
+                    onClick={() => router.push(`/community?parentId=${p.id}`)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-white border border-line text-foreground px-4 py-3 rounded-xl font-semibold text-sm hover:bg-canvas-soft transition-all duration-200"
+                  >
+                    <span>👥</span>
+                    <span>Communauté</span>
                   </button>
                 </div>
               )}

@@ -19,6 +19,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Agendas générés au runtime (données de session)
+schoolbridge-data/agendas/
+
 # Logs
 *.log
 npm-debug.log*

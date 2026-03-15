@@ -1,15 +1,31 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
 import "./globals.css";
 
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "SchoolBridge",
-  description: "Mentor IA multilingue pour les parents dans le système scolaire allemand",
+  title: "SchoolBridge — Votre mentor scolaire intelligent",
+  description:
+    "La passerelle entre votre famille et l'école allemande. Multilingue, personnalisé, disponible 24h/24.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
-      <body className="bg-slate-50 text-slate-900 min-h-screen font-sans antialiased">
+    <html lang="fr" className={`${jakarta.variable} ${dmSans.variable}`}>
+      <body className="bg-white text-foreground font-sans antialiased">
         {children}
       </body>
     </html>
